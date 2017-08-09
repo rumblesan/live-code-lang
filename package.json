@@ -11,7 +11,6 @@
   "scripts": {
     "build": "webpack --env build",
     "dev": "webpack --progress --colors --watch --env dev",
-
     "test": "mocha-webpack --webpack-config webpack.config.js \"tests/**/*.spec.js\"",
     "test:watch": "mocha-webpack --webpack-config webpack.config.js -w \"tests/**/*.spec.js\""
   },
@@ -21,7 +20,6 @@
     "babel-loader": "^7.1.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "babel-preset-es2015": "^6.24.1",
     "dentist": "1.0.3",
     "eslint": "^4.3.0",
     "eslint-config-prettier": "^2.3.0",
