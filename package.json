@@ -12,7 +12,8 @@
     "build": "webpack --env build",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha-webpack --webpack-config webpack.config.js \"tests/**/*.spec.js\"",
-    "test:watch": "mocha-webpack --webpack-config webpack.config.js -w \"tests/**/*.spec.js\""
+    "test:watch": "mocha-webpack --webpack-config webpack.config.js -w \"tests/**/*.spec.js\"",
+    "prettier": "prettier --single-quote --trailing-comma es5"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
