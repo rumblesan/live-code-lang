@@ -1,6 +1,6 @@
 /* global describe, it */
 
-import { run } from 'interpreter';
+import { interpret } from 'interpreter';
 import parser from 'grammar/lcl';
 import {
   Application,
@@ -30,7 +30,7 @@ describe('Interpreter', function() {
     var program = parser.parse('result 3 + 4 * 2', {
       functionNames: ['result']
     });
-    run(program, scope);
+    interpret(program, scope);
 
     assert.equal(output, 11, 'should return 11');
   });
@@ -52,7 +52,7 @@ describe('Interpreter', function() {
              result((a + 4) * foo)`),
       { functionNames: ['result'] }
     );
-    run(program, scope);
+    interpret(program, scope);
 
     assert.equal(output, 36, 'output should be 36');
   });
@@ -78,7 +78,7 @@ describe('Interpreter', function() {
       { functionNames: ['result'] }
     );
 
-    run(program, scope);
+    interpret(program, scope);
 
     assert.equal(output, 4, `output should be 4 not ${output}`);
   });
@@ -122,7 +122,7 @@ describe('Interpreter', function() {
 
     assert.deepEqual(program, expected);
 
-    run(program, scope);
+    interpret(program, scope);
 
     assert.equal(output, 9, `output should be 9 not ${output}`);
   });

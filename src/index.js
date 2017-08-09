@@ -1,7 +1,5 @@
 import parser from 'grammar/lcl';
 
-import { run } from 'interpreter';
+import { interpret } from 'interpreter';
 
-export const p = parser;
-
-export const interpret = run;
+export { parser, interpret };

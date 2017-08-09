@@ -28,7 +28,7 @@ function createChildScope(parentScope) {
 
 export const internal = {};
 
-export function run(programBlock, globalscope) {
+export function interpret(programBlock, globalscope) {
   const state = {
     exitCode: 0,
     doOnceTriggered: false
