@@ -12,6 +12,8 @@
     "build": "webpack --env build",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha-webpack --webpack-config webpack.config.js \"tests/**/*.spec.js\"",
+    "posttest": "npm run lint",
+    "lint": "eslint .",
     "test:watch": "mocha-webpack --webpack-config webpack.config.js -w \"tests/**/*.spec.js\"",
     "prettier": "prettier --single-quote --trailing-comma es5"
   },
