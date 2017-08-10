@@ -15,7 +15,7 @@ import {
   NUMBER,
   VARIABLE,
   STRING,
-  LIST
+  LIST,
 } from 'ast/types';
 
 function exists(node) {
@@ -31,7 +31,7 @@ export const internal = {};
 export function interpret(programBlock, globalscope) {
   const state = {
     exitCode: 0,
-    doOnceTriggered: false
+    doOnceTriggered: false,
   };
 
   if (programBlock.type !== BLOCK) {
@@ -219,7 +219,7 @@ internal.evaluateLambda = function(state, lambda, scope) {
   // type set to be lambda
   return {
     type: 'lambda',
-    func: func
+    func: func,
   };
 };
 

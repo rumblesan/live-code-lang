@@ -1,37 +1,37 @@
 import {
-  Null,
-  Block,
+  // Null,
+  // Block,
   Assignment,
-  Application,
-  If,
+  // Application,
+  // If,
   Lambda,
-  Times,
-  DoOnce,
-  UnaryOp,
-  BinaryOp,
-  DeIndex,
-  Num,
+  // Times,
+  // DoOnce,
+  // UnaryOp,
+  // BinaryOp,
+  // DeIndex,
+  // Num,
   Variable,
-  Str,
-  List
+  // Str,
+  // List,
 } from 'ast';
 
 import {
-  NULL,
-  BLOCK,
+  // NULL,
+  // BLOCK,
   ASSIGNMENT,
-  APPLICATION,
-  IF,
+  // APPLICATION,
+  // IF,
   LAMBDA,
-  TIMES,
-  DOONCE,
-  UNARYOP,
-  BINARYOP,
-  DEINDEX,
-  NUMBER,
+  // TIMES,
+  // DOONCE,
+  // UNARYOP,
+  // BINARYOP,
+  // DEINDEX,
+  // NUMBER,
   VARIABLE,
-  STRING,
-  LIST
+  // STRING,
+  // LIST,
 } from 'ast/types';
 
 import { astTransform } from 'ast/func';
@@ -41,7 +41,7 @@ export function variableLifter(
   initialState = {
     parentScope: {},
     scope: {},
-    free: []
+    free: [],
   }
 ) {
   return astTransform(
@@ -83,7 +83,7 @@ export function variableLifter(
         });
 
         return Lambda(lambda.argNames, newBody, lambda.inlinable, freeVars);
-      }
+      },
     },
     initialState
   );
