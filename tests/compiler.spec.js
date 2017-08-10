@@ -8,7 +8,7 @@ import {
   If,
   Lambda,
   Num,
-  Variable
+  Variable,
 } from 'ast';
 
 import * as assert from 'assert';
@@ -22,7 +22,7 @@ describe('Compiler', function() {
       Assignment(
         'bar',
         Lambda(['a'], BinaryOp('*', Variable('a'), Variable('time')))
-      )
+      ),
     ]);
 
     const expected = Block([
@@ -33,9 +33,9 @@ describe('Compiler', function() {
       Assignment(
         'bar',
         Lambda(['a'], BinaryOp('*', Variable('a'), Variable('time')), false, [
-          'time'
+          'time',
         ])
-      )
+      ),
     ]);
 
     const transformed = variableLifter(initialAst);
@@ -54,10 +54,10 @@ describe('Compiler', function() {
               'bar',
               Lambda(['b'], BinaryOp('*', Variable('b'), Variable('time')))
             ),
-            Application('bar', [Variable('a')])
+            Application('bar', [Variable('a')]),
           ])
         )
-      )
+      ),
     ]);
 
     const expected = Block([
@@ -75,12 +75,12 @@ describe('Compiler', function() {
                 ['time']
               )
             ),
-            Application('bar', [Variable('a')])
+            Application('bar', [Variable('a')]),
           ]),
           false,
           ['time']
         )
-      )
+      ),
     ]);
 
     const transformed = variableLifter(initialAst);
@@ -103,12 +103,12 @@ describe('Compiler', function() {
             If(
               Num(1),
               Block([
-                Application('bar', [BinaryOp('+', Variable('baz'), Num(2))])
+                Application('bar', [BinaryOp('+', Variable('baz'), Num(2))]),
               ])
-            )
+            ),
           ])
         )
-      )
+      ),
     ]);
 
     const expected = Block([
@@ -130,14 +130,74 @@ describe('Compiler', function() {
             If(
               Num(1),
               Block([
-                Application('bar', [BinaryOp('+', Variable('baz'), Num(2))])
+                Application('bar', [BinaryOp('+', Variable('baz'), Num(2))]),
               ])
-            )
+            ),
           ]),
           false,
           ['time', 'baz']
         )
-      )
+      ),
+    ]);
+
+    const transformed = variableLifter(initialAst);
+
+    assert.deepEqual(transformed, expected);
+  });
+
+  it('variable lifter finds free assignment variable', function() {
+    const initialAst = Block([
+      Assignment('x', Num(3)),
+      Assignment(
+        'foo',
+        Lambda(
+          ['a'],
+          Block([
+            Assignment(
+              'bar',
+              Lambda(
+                ['b'],
+                Block([
+                  Assignment(
+                    'x',
+                    BinaryOp('*', Variable('b'), Variable('time'))
+                  ),
+                ])
+              )
+            ),
+            Application('bar', [Variable('a')]),
+          ])
+        )
+      ),
+    ]);
+
+    const expected = Block([
+      Assignment('x', Num(3)),
+      Assignment(
+        'foo',
+        Lambda(
+          ['a'],
+          Block([
+            Assignment(
+              'bar',
+              Lambda(
+                ['b'],
+                Block([
+                  Assignment(
+                    'x',
+                    BinaryOp('*', Variable('b'), Variable('time'))
+                  ),
+                ]),
+                false,
+                ['time', 'x']
+              )
+            ),
+            Application('bar', [Variable('a')]),
+          ]),
+          false,
+          ['time', 'x']
+        )
+      ),
     ]);
 
     const transformed = variableLifter(initialAst);
