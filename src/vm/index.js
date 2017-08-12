@@ -14,6 +14,8 @@ import {
   POP,
   LOD,
   SAV,
+  LLD,
+  LSV,
 
   // LST,
   // LEN,
@@ -235,6 +237,14 @@ export function runVM(program) {
           B = opStack.pop();
         }
         heap[A] = B;
+        counter += 1;
+        break;
+      case LLD:
+        opStack.push(stackFrame.locals[op.A]);
+        counter += 1;
+        break;
+      case LSV:
+        stackFrame.locals[op.A] = opStack.pop();
         counter += 1;
         break;
       case NOP:

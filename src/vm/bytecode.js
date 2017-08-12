@@ -22,6 +22,9 @@ export const POP = 'POP'; // Pop a value off the stack
 export const LOD = 'LOD'; // Load a value from the heap
 export const SAV = 'SAV'; // Save a value to the heap
 
+export const LLD = 'LLD'; // Load a value from a local variable
+export const LSV = 'LSV'; // Save a value to a local variable
+
 // List Ops
 export const LST = 'LST'; // Create a list object
 export const LEN = 'LEN'; // Get the length of the list
