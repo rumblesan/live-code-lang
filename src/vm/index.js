@@ -27,6 +27,15 @@ import {
 
 const VMNULL = 0;
 
+function createStackFrame(returnAddress) {
+  return {
+    args: [],
+    locals: [],
+    returnAddress,
+    returnValue: VMNULL,
+  };
+}
+
 export function runVM(program) {
   let running = true;
   let status = 0;
@@ -39,6 +48,8 @@ export function runVM(program) {
 
   let A;
   let B;
+  let i;
+  let stackFrame;
 
   while (running) {
     let op = program[counter];
@@ -173,12 +184,23 @@ export function runVM(program) {
         } else {
           A = opStack.pop();
         }
+        if (op.B) {
+          B = op.B;
+        } else {
+          B = opStack.pop();
+        }
         // Want to return to next instruction
-        callStack.push(counter + 1);
+        stackFrame = createStackFrame(counter + 1);
+        for (i = 0; i < B; i += 1) {
+          stackFrame.args.push(callStack.pop());
+        }
+        callStack.push(stackFrame);
         counter = A;
         break;
       case RTN:
-        counter = callStack.pop();
+        stackFrame = callStack.pop();
+        opStack.push(stackFrame.returnValue);
+        counter = stackFrame.returnAddress;
         break;
       case PSH:
         if (op.A) {
