@@ -34,7 +34,7 @@ import {
   // LIST,
 } from 'ast/types';
 
-import { astTransform } from 'ast/func';
+import { astTransform, astTraverse } from 'ast/func';
 
 export function variableLifter(
   ast,
@@ -55,7 +55,7 @@ export function variableLifter(
       },
 
       [ASSIGNMENT]: (assignment, transFuncs, state) => {
-        const expr = variableLifter(assignment.expression, state);
+        const expr = astTraverse(assignment.expression, transFuncs, state);
         if (state.parentScope[assignment.identifier]) {
           state.free.push(assignment.identifier);
         } else {
@@ -73,7 +73,7 @@ export function variableLifter(
         }, {});
 
         const newState = { scope: newScope, free: [], parentScope: newParent };
-        const newBody = variableLifter(lambda.body, newState);
+        const newBody = astTraverse(lambda.body, transFuncs, newState);
         const freeVars = newState.free;
 
         freeVars.forEach(v => {
