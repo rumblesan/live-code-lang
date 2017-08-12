@@ -1,10 +1,12 @@
 import {
-  // Null,
-  // Block,
+  Null,
+  Block,
   Assignment,
-  // Application,
+  Application,
   // If,
   Lambda,
+  Func,
+  Closure,
   // Times,
   // DoOnce,
   // UnaryOp,
@@ -12,15 +14,17 @@ import {
   // DeIndex,
   // Num,
   Variable,
+  FuncPointer,
+  ClosurePointer,
   // Str,
   // List,
 } from 'ast';
 
 import {
   // NULL,
-  // BLOCK,
+  BLOCK,
   ASSIGNMENT,
-  // APPLICATION,
+  APPLICATION,
   // IF,
   LAMBDA,
   // TIMES,
@@ -36,15 +40,35 @@ import {
 
 import { astTransform, astTraverse } from 'ast/func';
 
-export function variableLifter(
-  ast,
-  initialState = {
+function genFuncName(idName, state) {
+  state.funcNum += 1;
+  return `func${idName}${state.funcNum}`;
+}
+
+function newStateScope(state, newScope) {
+  const newParent = Object.create(state.parentScope);
+  Object.assign(newParent, state.scope);
+
+  return {
+    funcNum: state.funcNum,
+    globalFuncs: state.globalFuncs,
+    liftedFuncs: state.liftedFuncs,
+    scope: newScope,
+    free: [],
+    parentScope: newParent,
+  };
+}
+
+export function lambdaLifter(ast, globalFuncs = {}) {
+  const initialState = {
+    funcNum: 0,
+    globalFuncs,
+    liftedFuncs: {},
     parentScope: {},
     scope: {},
     free: [],
-  }
-) {
-  return astTransform(
+  };
+  const liftedAst = astTransform(
     ast,
     {
       [VARIABLE]: (variable, transFuncs, state) => {
@@ -56,24 +80,65 @@ export function variableLifter(
 
       [ASSIGNMENT]: (assignment, transFuncs, state) => {
         const expr = astTraverse(assignment.expression, transFuncs, state);
-        if (state.parentScope[assignment.identifier]) {
-          state.free.push(assignment.identifier);
-        } else {
-          state.scope[assignment.identifier] = true;
+        let value = expr;
+
+        if (expr.type === LAMBDA) {
+          const funcName = genFuncName(assignment.identifier, state);
+          if (expr.freeVars.length === 0) {
+            value = FuncPointer(funcName);
+            state.liftedFuncs[funcName] = Func(
+              funcName,
+              expr.argNames,
+              expr.body
+            );
+          } else {
+            value = ClosurePointer(funcName, expr.freeVars);
+            state.liftedFuncs[funcName] = Closure(
+              funcName,
+              expr.argNames,
+              expr.freeVars,
+              expr.body
+            );
+          }
         }
-        return Assignment(assignment.identifier, expr);
+
+        if (state.parentScope[assignment.identifier]) {
+          // Assignment to variable outside this scope
+          // Redefine it within this scope but make it clear that
+          // this is a free variable
+          state.free.push(assignment.identifier);
+        }
+        state.scope[assignment.identifier] = value;
+        return Assignment(assignment.identifier, value);
+      },
+
+      [APPLICATION]: (application, transFuncs, state) => {
+        const args = application.args.map(a =>
+          astTraverse(a, transFuncs, state)
+        );
+        if (state.scope[application.identifier]) {
+          const fp = state.scope[application.identifier];
+          // Locally defined lambda
+          return Application(fp.funcName, args, application.block);
+        } else if (state.globalFuncs[application.identifier]) {
+          const fp = state.globalFuncs[application.identifier];
+          // Locally defined lambda
+          return Application(fp.funcName, args, application.block);
+        } else {
+          // We don't know where this function is....
+          return Null();
+        }
       },
 
       [LAMBDA]: (lambda, transFuncs, state) => {
-        const newParent = Object.create(state.parentScope);
-        Object.assign(newParent, state.scope);
         const newScope = lambda.argNames.reduce((s, name) => {
           s[name] = true;
           return s;
         }, {});
+        const newState = newStateScope(state, newScope);
 
-        const newState = { scope: newScope, free: [], parentScope: newParent };
         const newBody = astTraverse(lambda.body, transFuncs, newState);
+        state.funcNum = newState.funcNum;
         const freeVars = newState.free;
 
         freeVars.forEach(v => {
@@ -87,4 +152,12 @@ export function variableLifter(
     },
     initialState
   );
+
+  if (liftedAst.type === BLOCK) {
+    return Block(
+      Object.values(initialState.liftedFuncs).concat(liftedAst.elements)
+    );
+  } else {
+    return Block(Object.values(initialState.liftedFuncs).concat([liftedAst]));
+  }
 }

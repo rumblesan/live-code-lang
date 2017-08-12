@@ -5,6 +5,8 @@ import {
   APPLICATION,
   IF,
   LAMBDA,
+  FUNC,
+  CLOSURE,
   TIMES,
   DOONCE,
   UNARYOP,
@@ -12,6 +14,8 @@ import {
   DEINDEX,
   NUMBER,
   VARIABLE,
+  FUNCPOINTER,
+  CLOSUREPOINTER,
   STRING,
   LIST,
 } from './types';
@@ -85,6 +89,36 @@ export function Lambda(argNames, body, inlinable = false, freeVars = []) {
     body,
     inlinable,
     freeVars,
+  };
+}
+
+/**
+ *  name:      Identifier
+ *  argNames:  [Identifier]
+ *  body:      Block
+ */
+export function Func(name, argNames, body) {
+  return {
+    type: FUNC,
+    name,
+    argNames,
+    body,
+  };
+}
+
+/**
+ *  name:         Identifier
+ *  argNames:     [Identifier]
+ *  externalVars: [Identifier]
+ *  body:         Block
+ */
+export function Closure(name, argNames, externalVars, body) {
+  return {
+    type: CLOSURE,
+    name,
+    argNames,
+    externalVars,
+    body,
   };
 }
 
@@ -168,6 +202,28 @@ export function Variable(identifier) {
   return {
     type: VARIABLE,
     identifier,
+  };
+}
+
+/**
+ *  funcname: Identifier
+ */
+export function FuncPointer(funcName) {
+  return {
+    type: FUNCPOINTER,
+    funcName,
+  };
+}
+
+/**
+ *  funcname: Identifier
+ *  externalVars: [Identifier]
+ */
+export function ClosurePointer(funcName, externalVars) {
+  return {
+    type: CLOSUREPOINTER,
+    funcName,
+    externalVars,
   };
 }
 
