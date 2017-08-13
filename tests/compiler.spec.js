@@ -13,6 +13,7 @@ import {
   Closure,
   Num,
   Variable,
+  GlobalVar,
 } from 'ast';
 
 import * as assert from 'assert';
@@ -31,23 +32,20 @@ describe('Lambda Lifter', function() {
 
     const expected = Block([
       Func('funcfoo1', ['a'], BinaryOp('*', Variable('a'), Num(2))),
-      Closure(
-        'funcbar2',
-        ['a'],
-        ['time'],
-        BinaryOp('*', Variable('a'), Variable('time'))
-      ),
+      Func('funcbar2', ['a'], BinaryOp('*', Variable('a'), GlobalVar('time'))),
       Assignment('foo', FuncPointer('funcfoo1')),
-      Assignment('bar', ClosurePointer('funcbar2', ['time'])),
+      Assignment('bar', FuncPointer('funcbar2')),
     ]);
 
-    const transformed = lambdaLifter(initialAst);
+    const globalVars = { time: true };
+    const transformed = lambdaLifter(initialAst, globalVars);
 
     assert.deepEqual(transformed, expected);
   });
 
   it('lifts more complex free variable lambdas', function() {
     const initialAst = Block([
+      Assignment('x', Num(3)),
       Assignment(
         'foo',
         Lambda(
@@ -55,7 +53,7 @@ describe('Lambda Lifter', function() {
           Block([
             Assignment(
               'bar',
-              Lambda(['b'], BinaryOp('*', Variable('b'), Variable('time')))
+              Lambda(['b'], BinaryOp('*', Variable('b'), Variable('x')))
             ),
             Application('bar', [Variable('a')]),
           ])
@@ -67,22 +65,24 @@ describe('Lambda Lifter', function() {
       Closure(
         'funcbar1',
         ['b'],
-        ['time'],
-        BinaryOp('*', Variable('b'), Variable('time'))
+        ['x'],
+        BinaryOp('*', Variable('b'), Variable('x'))
       ),
       Closure(
         'funcfoo2',
         ['a'],
-        ['time'],
+        ['x'],
         Block([
-          Assignment('bar', ClosurePointer('funcbar1', ['time'])),
+          Assignment('bar', ClosurePointer('funcbar1', ['x'])),
           Application('funcbar1', [Variable('a')]),
         ])
       ),
-      Assignment('foo', ClosurePointer('funcfoo2', ['time'])),
+      Assignment('x', Num(3)),
+      Assignment('foo', ClosurePointer('funcfoo2', ['x'])),
     ]);
 
-    const transformed = lambdaLifter(initialAst);
+    const globalVars = { time: true };
+    const transformed = lambdaLifter(initialAst, globalVars);
 
     assert.deepEqual(transformed, expected);
   });
@@ -111,18 +111,13 @@ describe('Lambda Lifter', function() {
     ]);
 
     const expected = Block([
-      Closure(
-        'funcbar1',
-        ['b'],
-        ['time'],
-        BinaryOp('*', Variable('b'), Variable('time'))
-      ),
+      Func('funcbar1', ['b'], BinaryOp('*', Variable('b'), GlobalVar('time'))),
       Closure(
         'funcfoo2',
         ['a'],
-        ['time', 'baz'],
+        ['baz'],
         Block([
-          Assignment('bar', ClosurePointer('funcbar1', ['time'])),
+          Assignment('bar', FuncPointer('funcbar1')),
           If(
             Num(1),
             Block([
@@ -132,10 +127,11 @@ describe('Lambda Lifter', function() {
         ])
       ),
       Assignment('baz', Num(4)),
-      Assignment('foo', ClosurePointer('funcfoo2', ['time', 'baz'])),
+      Assignment('foo', ClosurePointer('funcfoo2', ['baz'])),
     ]);
 
-    const transformed = lambdaLifter(initialAst);
+    const globalVars = { time: true };
+    const transformed = lambdaLifter(initialAst, globalVars);
 
     assert.deepEqual(transformed, expected);
   });
@@ -171,24 +167,27 @@ describe('Lambda Lifter', function() {
       Closure(
         'funcbar1',
         ['b'],
-        ['time', 'x'],
-        Block([Assignment('x', BinaryOp('*', Variable('b'), Variable('time')))])
+        ['x'],
+        Block([
+          Assignment('x', BinaryOp('*', Variable('b'), GlobalVar('time'))),
+        ])
       ),
       Closure(
         'funcfoo2',
         ['a'],
-        ['time', 'x'],
+        ['x'],
         Block([
-          Assignment('bar', ClosurePointer('funcbar1', ['time', 'x'])),
+          Assignment('bar', ClosurePointer('funcbar1', ['x'])),
           Application('funcbar1', [Variable('a')]),
         ])
       ),
       Assignment('x', Num(3)),
-      Assignment('foo', ClosurePointer('funcfoo2', ['time', 'x'])),
+      Assignment('foo', ClosurePointer('funcfoo2', ['x'])),
       Application('funcfoo2', [Num(1)]),
     ]);
 
-    const transformed = lambdaLifter(initialAst);
+    const globalVars = { time: true };
+    const transformed = lambdaLifter(initialAst, globalVars);
 
     assert.deepEqual(transformed, expected);
   });

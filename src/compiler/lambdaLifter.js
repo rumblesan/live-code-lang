@@ -14,6 +14,7 @@ import {
   // DeIndex,
   // Num,
   Variable,
+  GlobalVar,
   FuncPointer,
   ClosurePointer,
   // Str,
@@ -52,6 +53,7 @@ function newStateScope(state, newScope) {
   return {
     funcNum: state.funcNum,
     globalFuncs: state.globalFuncs,
+    globalVars: state.globalVars,
     liftedFuncs: state.liftedFuncs,
     scope: newScope,
     free: [],
@@ -59,10 +61,11 @@ function newStateScope(state, newScope) {
   };
 }
 
-export function lambdaLifter(ast, globalFuncs = {}) {
+export function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
   const initialState = {
     funcNum: 0,
     globalFuncs,
+    globalVars,
     liftedFuncs: {},
     parentScope: {},
     scope: {},
@@ -72,9 +75,12 @@ export function lambdaLifter(ast, globalFuncs = {}) {
     ast,
     {
       [VARIABLE]: (variable, transFuncs, state) => {
-        if (!state.scope[variable.identifier]) {
-          state.free.push(variable.identifier);
+        if (state.scope[variable.identifier]) {
+          return Variable(variable.identifier);
+        } else if (state.globalVars[variable.identifier]) {
+          return GlobalVar(variable.identifier);
         }
+        state.free.push(variable.identifier);
         return Variable(variable.identifier);
       },
 

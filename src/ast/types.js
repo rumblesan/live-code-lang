@@ -13,6 +13,7 @@ export const BINARYOP = 'BINARYOP';
 export const DEINDEX = 'DEINDEX';
 export const NUMBER = 'NUMBER';
 export const VARIABLE = 'VARIABLE';
+export const GLOBALVAR = 'GLOBALVAR';
 export const FUNCPOINTER = 'FUNCPOINTER';
 export const CLOSUREPOINTER = 'CLOSUREPOINTER';
 export const STRING = 'STRING';
