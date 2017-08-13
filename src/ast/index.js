@@ -14,6 +14,7 @@ import {
   DEINDEX,
   NUMBER,
   VARIABLE,
+  GLOBALVAR,
   FUNCPOINTER,
   CLOSUREPOINTER,
   STRING,
@@ -201,6 +202,16 @@ export function Num(value) {
 export function Variable(identifier) {
   return {
     type: VARIABLE,
+    identifier,
+  };
+}
+
+/**
+ *  value: Identifier
+ */
+export function GlobalVar(identifier) {
+  return {
+    type: GLOBALVAR,
     identifier,
   };
 }
