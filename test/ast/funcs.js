@@ -1,21 +1,17 @@
 /* global describe, it */
 
-import { Block, Assignment, BinaryOp, Num } from '../../../src/js/lcl/ast';
-import { NUMBER } from '../../../src/js/lcl/ast/types';
+import { Block, Assignment, BinaryOp, Num } from 'ast';
+import { NUMBER } from 'ast/types';
 
 import * as assert from 'assert';
 
-import {
-  astTraverse,
-  astTransform,
-  defaultTraverseFunctions
-} from '../../../src/js/lcl/ast/func';
+import { astTraverse, astTransform, defaultTraverseFunctions } from 'ast/func';
 
 describe('AST Funcs', function() {
   it('astTraverse runs fine', function() {
     const initialAst = Block([
       Assignment('foo', Num(4)),
-      Assignment('bar', BinaryOp('*', Num(2), Num(3)))
+      Assignment('bar', BinaryOp('*', Num(2), Num(3))),
     ]);
 
     astTraverse(initialAst, defaultTraverseFunctions, {});
@@ -24,16 +20,16 @@ describe('AST Funcs', function() {
   it('simple transform', function() {
     const initialAst = Block([
       Assignment('foo', Num(4)),
-      Assignment('bar', BinaryOp('*', Num(2), Num(3)))
+      Assignment('bar', BinaryOp('*', Num(2), Num(3))),
     ]);
 
     const expected = Block([
       Assignment('foo', Num(8)),
-      Assignment('bar', BinaryOp('*', Num(4), Num(6)))
+      Assignment('bar', BinaryOp('*', Num(4), Num(6))),
     ]);
 
     const transformed = astTransform(initialAst, {
-      [NUMBER]: ast => Num(ast.value * 2)
+      [NUMBER]: ast => Num(ast.value * 2),
     });
 
     assert.deepEqual(transformed, expected);
