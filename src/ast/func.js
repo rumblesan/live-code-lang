@@ -13,7 +13,7 @@ import {
   Num,
   Variable,
   Str,
-  List
+  List,
 } from 'ast';
 
 import {
@@ -31,7 +31,7 @@ import {
   NUMBER,
   VARIABLE,
   STRING,
-  LIST
+  LIST,
 } from 'ast/types';
 
 export const defaultTraverseFunctions = {
@@ -109,7 +109,7 @@ export const defaultTraverseFunctions = {
   // Number, String, Variable
   default: ast => {
     throw new Error(`Unknown AST type ${ast.type}`);
-  }
+  },
 };
 
 export const astTraverse = (ast, transFuncs, state) => {

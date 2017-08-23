@@ -1,14 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import {
-  Application,
-  Assignment,
-  Block,
-  Num,
-  Times,
-  Variable
-} from 'ast';
+import { Application, Assignment, Block, Num, Times, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -22,11 +15,11 @@ describe('Loop', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['box'],
-      inlinableFunctions: ['box']
+      inlinableFunctions: ['box'],
     });
 
     var expected = Block([
-      Times(Num(4), Block([Application('box', [Num(4)])]))
+      Times(Num(4), Block([Application('box', [Num(4)])])),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -38,11 +31,11 @@ describe('Loop', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['box'],
-      inlinableFunctions: ['box']
+      inlinableFunctions: ['box'],
     });
 
     var expected = Block([
-      Times(Num(4), Block([Application('box', [Num(4)])]), 'i')
+      Times(Num(4), Block([Application('box', [Num(4)])]), 'i'),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -55,12 +48,12 @@ describe('Loop', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['box'],
-      inlinableFunctions: ['box']
+      inlinableFunctions: ['box'],
     });
 
     var expected = Block([
       Assignment('foo', Num(100)),
-      Times(Variable('foo'), Block([Application('box', [Num(4)])]), 'i')
+      Times(Variable('foo'), Block([Application('box', [Num(4)])]), 'i'),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -69,11 +62,11 @@ describe('Loop', function() {
     var program = dedent('4 times 3 times box');
     var parsed = parser.parse(program, {
       functionNames: ['box'],
-      inlinableFunctions: ['box']
+      inlinableFunctions: ['box'],
     });
 
     var expected = Block([
-      Times(Num(4), Block([Times(Num(3), Block([Application('box', [])]))]))
+      Times(Num(4), Block([Times(Num(3), Block([Application('box', [])]))])),
     ]);
     assert.deepEqual(parsed, expected);
   });

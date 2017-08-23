@@ -9,7 +9,7 @@ import {
   Block,
   Lambda,
   Num,
-  Variable
+  Variable,
 } from 'ast';
 
 import { dedent } from 'dentist';
@@ -24,11 +24,11 @@ describe('Interpreter', function() {
         type: 'builtin',
         func: function(v) {
           output = v;
-        }
-      }
+        },
+      },
     };
     var program = parser.parse('result 3 + 4 * 2', {
-      functionNames: ['result']
+      functionNames: ['result'],
     });
     interpret(program, scope);
 
@@ -42,9 +42,9 @@ describe('Interpreter', function() {
         type: 'builtin',
         func: function(v) {
           output = v;
-        }
+        },
       },
-      foo: 4
+      foo: 4,
     };
     var program = parser.parse(
       dedent(`
@@ -64,8 +64,8 @@ describe('Interpreter', function() {
         type: 'builtin',
         func: function(v) {
           output = v;
-        }
-      }
+        },
+      },
     };
 
     var program = parser.parse(
@@ -90,8 +90,8 @@ describe('Interpreter', function() {
         type: 'builtin',
         func: function(v) {
           output = v;
-        }
-      }
+        },
+      },
     };
 
     var program = parser.parse(
@@ -116,8 +116,8 @@ describe('Interpreter', function() {
           '+',
           Application('b', [Application('a', [Num(2)]), Num(3)]),
           Application('a', [Num(1)])
-        )
-      ])
+        ),
+      ]),
     ]);
 
     assert.deepEqual(program, expected);

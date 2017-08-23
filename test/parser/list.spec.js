@@ -1,14 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import {
-  Assignment,
-  Block,
-  DeIndex,
-  List,
-  Num,
-  Variable
-} from 'ast';
+import { Assignment, Block, DeIndex, List, Num, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -21,7 +14,7 @@ describe('List', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: [],
-      inlinableFunctions: []
+      inlinableFunctions: [],
     });
 
     var expected = Block([Assignment('a', List([Num(1), Num(3), Num(5)]))]);
@@ -35,12 +28,12 @@ describe('List', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: [],
-      inlinableFunctions: []
+      inlinableFunctions: [],
     });
 
     var expected = Block([
       Assignment('a', List([Num(1), Num(3), Num(5)])),
-      Assignment('b', DeIndex(Variable('a'), Num(0)))
+      Assignment('b', DeIndex(Variable('a'), Num(0))),
     ]);
     assert.deepEqual(parsed, expected);
   });

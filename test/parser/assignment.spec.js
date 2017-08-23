@@ -1,14 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import {
-  Assignment,
-  BinaryOp,
-  Block,
-  Num,
-  UnaryOp,
-  Variable
-} from 'ast';
+import { Assignment, BinaryOp, Block, Num, UnaryOp, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -80,7 +73,7 @@ describe('Assignment', function() {
       Assignment(
         'number',
         BinaryOp('*', BinaryOp('+', Num(456), Num(33)), Num(2))
-      )
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);

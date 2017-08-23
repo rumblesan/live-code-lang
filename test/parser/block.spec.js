@@ -18,7 +18,7 @@ describe('Block', function() {
 
     var expected = Block([
       DoOnce(true, Block([Application('box', [Num(4)])])),
-      Application('peg', [Num(3), Num(4)])
+      Application('peg', [Num(3), Num(4)]),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -34,7 +34,7 @@ describe('Block', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['rotate', 'ball', 'peg', 'box'],
-      inlinableFunctions: ['rotate', 'ball', 'peg', 'box']
+      inlinableFunctions: ['rotate', 'ball', 'peg', 'box'],
     });
 
     var expected = Block([
@@ -44,13 +44,13 @@ describe('Block', function() {
           DoOnce(
             true,
             Block([
-              Application('rotate', [], Block([Application('box', [Num(4)])]))
+              Application('rotate', [], Block([Application('box', [Num(4)])])),
             ])
           ),
-          Application('peg', [Num(4)])
+          Application('peg', [Num(4)]),
         ])
       ),
-      Application('ball', [Num(2)])
+      Application('ball', [Num(2)]),
     ]);
     assert.deepEqual(parsed, expected);
   });

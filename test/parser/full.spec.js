@@ -1,14 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import {
-  Application,
-  BinaryOp,
-  Block,
-  Num,
-  Times,
-  Variable
-} from 'ast';
+import { Application, BinaryOp, Block, Num, Times, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -44,11 +37,11 @@ describe('Parser', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['rotate', 'box'],
-      inlinableFunctions: ['rotate', 'box']
+      inlinableFunctions: ['rotate', 'box'],
     });
 
     var expected = Block([
-      Application('rotate', [Num(2), Num(3)], Block([Application('box', [])]))
+      Application('rotate', [Num(2), Num(3)], Block([Application('box', [])])),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -60,11 +53,11 @@ describe('Parser', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['rotate', 'box'],
-      inlinableFunctions: ['rotate', 'box']
+      inlinableFunctions: ['rotate', 'box'],
     });
 
     var expected = Block([
-      Application('rotate', [Num(2), Num(3)], Block([Application('box', [])]))
+      Application('rotate', [Num(2), Num(3)], Block([Application('box', [])])),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -75,7 +68,7 @@ describe('Parser', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['rotate', 'fill', 'box'],
-      inlinableFunctions: ['rotate', 'fill', 'box']
+      inlinableFunctions: ['rotate', 'fill', 'box'],
     });
 
     var expected = Block([
@@ -87,9 +80,9 @@ describe('Parser', function() {
             'fill',
             [Variable('red')],
             Block([Application('box', [])])
-          )
+          ),
         ])
-      )
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -101,7 +94,7 @@ describe('Parser', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['rotate', 'fill', 'box'],
-      inlinableFunctions: ['rotate', 'fill', 'box']
+      inlinableFunctions: ['rotate', 'fill', 'box'],
     });
 
     var expected = Block([
@@ -113,9 +106,9 @@ describe('Parser', function() {
             'fill',
             [Variable('red')],
             Block([Application('box', [])])
-          )
+          ),
         ])
-      )
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -128,7 +121,7 @@ describe('Parser', function() {
                          `);
     var parsed = parser.parse(program, {
       functionNames: ['scale', 'wave', 'peg', 'ball'],
-      inlinableFunctions: ['scale', 'peg', 'ball']
+      inlinableFunctions: ['scale', 'peg', 'ball'],
     });
 
     var expected = Block([
@@ -144,11 +137,11 @@ describe('Parser', function() {
                 'scale',
                 [Num(2), Application('wave', [Num(2)])],
                 Block([Application('ball', [])])
-              )
+              ),
             ])
-          )
+          ),
         ])
-      )
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -158,7 +151,7 @@ describe('Parser', function() {
     var program = 'rotate wave + 2 times box';
     var parsed = parser.parse(program, {
       functionNames: ['rotate', 'wave', 'box'],
-      inlinableFunctions: ['rotate', 'box']
+      inlinableFunctions: ['rotate', 'box'],
     });
 
     var expected = Block([
@@ -169,9 +162,9 @@ describe('Parser', function() {
           Times(
             BinaryOp('+', Application('wave', []), Num(2)),
             Block([Application('box', [])])
-          )
+          ),
         ])
-      )
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
