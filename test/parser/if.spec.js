@@ -1,11 +1,19 @@
 /* global describe, it */
 
-var parser = require('grammar/lcl');
-var ast = require('ast');
+import parser from 'grammar/lcl';
+import {
+  Application,
+  Assignment,
+  BinaryOp,
+  Block,
+  If,
+  Num,
+  Variable,
+} from 'ast';
 
-var dedent = require('dentist').dedent;
+import { dedent } from 'dentist';
 
-var assert = require('assert');
+import assert from 'assert';
 
 describe('If', function() {
   it('simple if statement parses', function() {
@@ -20,11 +28,11 @@ describe('If', function() {
       inlibaleFunctions: ['box'],
     });
 
-    var expected = ast.Block([
-      ast.Assignment('a', ast.Num(3)),
-      ast.If(
-        ast.BinaryOp('==', ast.Variable('a'), ast.Num(3)),
-        ast.Block([ast.Application('box', [])])
+    var expected = Block([
+      Assignment('a', Num(3)),
+      If(
+        BinaryOp('==', Variable('a'), Num(3)),
+        Block([Application('box', [])])
       ),
     ]);
 
@@ -43,11 +51,11 @@ describe('If', function() {
       inlibaleFunctions: ['box'],
     });
 
-    var expected = ast.Block([
-      ast.Assignment('a', ast.Num(3)),
-      ast.If(
-        ast.BinaryOp('==', ast.Variable('a'), ast.Num(3)),
-        ast.Block([ast.Application('box', [])])
+    var expected = Block([
+      Assignment('a', Num(3)),
+      If(
+        BinaryOp('==', Variable('a'), Num(3)),
+        Block([Application('box', [])])
       ),
     ]);
 
@@ -67,12 +75,12 @@ describe('If', function() {
       inlinableFunctions: ['box', 'peg'],
     });
 
-    var expected = ast.Block([
-      ast.Assignment('a', ast.Num(3)),
-      ast.If(
-        ast.BinaryOp('==', ast.Variable('a'), ast.Num(3)),
-        ast.Block([ast.Application('box', [])]),
-        ast.If(ast.Num(1), ast.Block([ast.Application('peg', [])]))
+    var expected = Block([
+      Assignment('a', Num(3)),
+      If(
+        BinaryOp('==', Variable('a'), Num(3)),
+        Block([Application('box', [])]),
+        If(Num(1), Block([Application('peg', [])]))
       ),
     ]);
 
@@ -90,14 +98,14 @@ describe('If', function() {
       inlinableFunctions: ['box', 'peg'],
     });
 
-    var expected = ast.Block([
-      ast.Assignment('a', ast.Num(3)),
-      ast.If(
-        ast.BinaryOp('==', ast.Variable('a'), ast.Num(3)),
-        ast.Block([ast.Application('box', [])]),
-        ast.Block([ast.Application('peg', [ast.Num(1)])])
+    var expected = Block([
+      Assignment('a', Num(3)),
+      If(
+        BinaryOp('==', Variable('a'), Num(3)),
+        Block([Application('box', [])]),
+        Block([Application('peg', [Num(1)])])
       ),
-      ast.Application('box', []),
+      Application('box', []),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -117,15 +125,15 @@ describe('If', function() {
       inlinableFunctions: ['box', 'peg', 'ball'],
     });
 
-    var expected = ast.Block([
-      ast.Assignment('a', ast.Num(3)),
-      ast.If(
-        ast.BinaryOp('==', ast.Variable('a'), ast.Num(1)),
-        ast.Block([ast.Application('box', [])]),
-        ast.If(
-          ast.BinaryOp('==', ast.Variable('a'), ast.Num(2)),
-          ast.Block([ast.Application('ball', [])]),
-          ast.If(ast.Num(1), ast.Block([ast.Application('peg', [])]))
+    var expected = Block([
+      Assignment('a', Num(3)),
+      If(
+        BinaryOp('==', Variable('a'), Num(1)),
+        Block([Application('box', [])]),
+        If(
+          BinaryOp('==', Variable('a'), Num(2)),
+          Block([Application('ball', [])]),
+          If(Num(1), Block([Application('peg', [])]))
         )
       ),
     ]);
@@ -145,15 +153,15 @@ describe('If', function() {
       inlinableFunctions: ['box', 'peg', 'rotate'],
     });
 
-    var expected = ast.Block([
-      ast.Application(
+    var expected = Block([
+      Application(
         'rotate',
         [],
-        ast.Block([
-          ast.If(
-            ast.Num(1),
-            ast.Block([ast.Application('box', [])]),
-            ast.If(ast.Num(1), ast.Block([ast.Application('peg', [])]))
+        Block([
+          If(
+            Num(1),
+            Block([Application('box', [])]),
+            If(Num(1), Block([Application('peg', [])]))
           ),
         ])
       ),
@@ -173,22 +181,12 @@ describe('If', function() {
       inlinableFunctions: ['box', 'rotate'],
     });
 
-    var expected = ast.Block([
-      ast.If(
-        ast.BinaryOp(
-          '<',
-          ast.BinaryOp('%', ast.Variable('time'), ast.Num(10)),
-          ast.Num(5)
-        ),
-        ast.Block([
-          ast.Application('ambientLight', [
-            ast.Num(255),
-            ast.Num(255),
-            ast.Num(255),
-          ]),
-        ])
+    var expected = Block([
+      If(
+        BinaryOp('<', BinaryOp('%', Variable('time'), Num(10)), Num(5)),
+        Block([Application('ambientLight', [Num(255), Num(255), Num(255)])])
       ),
-      ast.Application('rotate', [], ast.Block([ast.Application('box', [])])),
+      Application('rotate', [], Block([Application('box', [])])),
     ]);
 
     assert.deepEqual(parsed, expected);
