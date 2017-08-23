@@ -61,7 +61,7 @@ function newStateScope(state, newScope) {
   };
 }
 
-export function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
+export default function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
   const initialState = {
     funcNum: 0,
     globalFuncs,

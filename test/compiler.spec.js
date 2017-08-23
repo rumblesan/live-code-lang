@@ -18,7 +18,7 @@ import {
 
 import * as assert from 'assert';
 
-import { lambdaLifter } from 'compiler/lambdaLifter';
+import lambdaLifter from 'compiler/lambdaLifter';
 
 describe('Lambda Lifter', function() {
   it('lifts no/simple free variable lambdas', function() {

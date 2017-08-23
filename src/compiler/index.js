@@ -34,7 +34,7 @@ import {
   // LIST,
 } from 'ast/types';
 
-import { lambdaLifter } from './lambdaLifter';
+import lambdaLifter from './lambdaLifter';
 
 import { astTransform } from 'ast/func';
 
