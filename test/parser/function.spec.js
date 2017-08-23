@@ -23,7 +23,7 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(['a'], BinaryOp('+', Variable('a'), Num(1)), false)
       ),
     ]);
@@ -39,7 +39,7 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(['a', 'b'], BinaryOp('+', Variable('a'), Variable('b')), false)
       ),
     ]);
@@ -60,7 +60,7 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda([], BinaryOp('*', Num(255), Application('random', [])), false)
       ),
       Application('fill', [Application('foo', [])]),
@@ -107,11 +107,14 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'bar',
+        Variable('bar'),
         Lambda(
           ['a', 'b'],
           Block([
-            Assignment('c', BinaryOp('+', Variable('a'), Variable('b'))),
+            Assignment(
+              Variable('c'),
+              BinaryOp('+', Variable('a'), Variable('b'))
+            ),
             Application('box', [Variable('c'), Num(3)]),
           ]),
           false
@@ -137,7 +140,7 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'bar',
+        Variable('bar'),
         Lambda(
           ['a', 'b'],
           Block([
@@ -164,11 +167,11 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(['a'], BinaryOp('+', Variable('a'), Num(3)), false)
       ),
       Assignment(
-        'bar',
+        Variable('bar'),
         Application('foo', [
           BinaryOp('+', Num(1), Application('foo', [Num(2)])),
         ])
@@ -187,11 +190,11 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(['a', 'b'], BinaryOp('+', Variable('a'), Variable('b')), false)
       ),
       Assignment(
-        'bar',
+        Variable('bar'),
         Application('foo', [Application('foo', [Num(1), Num(2), Num(3)])])
       ),
     ]);
@@ -210,7 +213,7 @@ describe('Function', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(
           ['x', 'y', 'j', 'z'],
           BinaryOp(
@@ -335,9 +338,18 @@ describe('Function', function() {
     });
 
     var expected = Block([
-      Assignment('a', Application('bar', [BinaryOp('+', Num(3), Num(1))])),
-      Assignment('b', BinaryOp('+', Application('bar', [Num(3)]), Num(1))),
-      Assignment('c', Application('bar', [BinaryOp('+', Num(3), Num(1))])),
+      Assignment(
+        Variable('a'),
+        Application('bar', [BinaryOp('+', Num(3), Num(1))])
+      ),
+      Assignment(
+        Variable('b'),
+        BinaryOp('+', Application('bar', [Num(3)]), Num(1))
+      ),
+      Assignment(
+        Variable('c'),
+        Application('bar', [BinaryOp('+', Num(3), Num(1))])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -384,7 +396,7 @@ describe('Function', function() {
     });
 
     var expected = Block([
-      Assignment('a', Num(3)),
+      Assignment(Variable('a'), Num(3)),
       Application(
         'rotate',
         [],

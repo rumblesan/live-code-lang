@@ -106,9 +106,12 @@ describe('Interpreter', function() {
     );
 
     var expected = Block([
-      Assignment('a', Lambda(['x'], BinaryOp('*', Variable('x'), Num(2)))),
       Assignment(
-        'b',
+        Variable('a'),
+        Lambda(['x'], BinaryOp('*', Variable('x'), Num(2)))
+      ),
+      Assignment(
+        Variable('b'),
         Lambda(['x', 'y'], BinaryOp('+', Variable('x'), Variable('y')))
       ),
       Application('result', [

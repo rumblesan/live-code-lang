@@ -12,7 +12,9 @@ describe('Assignment', function() {
     var program = 'a = 3 + 5';
     var parsed = parser.parse(program);
 
-    var expected = Block([Assignment('a', BinaryOp('+', Num(3), Num(5)))]);
+    var expected = Block([
+      Assignment(Variable('a'), BinaryOp('+', Num(3), Num(5))),
+    ]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -21,7 +23,7 @@ describe('Assignment', function() {
     var program = 'number = 444';
     var parsed = parser.parse(program);
 
-    var expected = Block([Assignment('number', Num(444))]);
+    var expected = Block([Assignment(Variable('number'), Num(444))]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -30,7 +32,9 @@ describe('Assignment', function() {
     var program = 'number = -333';
     var parsed = parser.parse(program);
 
-    var expected = Block([Assignment('number', UnaryOp('-', Num(333)))]);
+    var expected = Block([
+      Assignment(Variable('number'), UnaryOp('-', Num(333))),
+    ]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -44,7 +48,7 @@ describe('Assignment', function() {
     var parsed = parser.parse(program);
 
     var numa = Assignment(
-      'numa',
+      Variable('numa'),
       BinaryOp(
         '-',
         BinaryOp('+', Num(55), BinaryOp('*', Num(44), Num(2))),
@@ -52,11 +56,11 @@ describe('Assignment', function() {
       )
     );
     var numb = Assignment(
-      'numb',
+      Variable('numb'),
       BinaryOp('*', Variable('numa'), UnaryOp('-', Num(33)))
     );
     var numc = Assignment(
-      'numc',
+      Variable('numc'),
       BinaryOp('+', Variable('numa'), Variable('numb'))
     );
 
@@ -71,7 +75,7 @@ describe('Assignment', function() {
 
     var expected = Block([
       Assignment(
-        'number',
+        Variable('number'),
         BinaryOp('*', BinaryOp('+', Num(456), Num(33)), Num(2))
       ),
     ]);

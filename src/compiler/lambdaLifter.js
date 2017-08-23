@@ -89,7 +89,7 @@ export function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
         let value = expr;
 
         if (expr.type === LAMBDA) {
-          const funcName = genFuncName(assignment.identifier, state);
+          const funcName = genFuncName(assignment.variable.identifier, state);
           if (expr.freeVars.length === 0) {
             value = FuncPointer(funcName);
             state.liftedFuncs[funcName] = Func(
@@ -108,14 +108,14 @@ export function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
           }
         }
 
-        if (state.parentScope[assignment.identifier]) {
+        if (state.parentScope[assignment.variable.identifier]) {
           // Assignment to variable outside this scope
           // Redefine it within this scope but make it clear that
           // this is a free variable
-          state.free.push(assignment.identifier);
+          state.free.push(assignment.variable.identifier);
         }
-        state.scope[assignment.identifier] = value;
-        return Assignment(assignment.identifier, value);
+        state.scope[assignment.variable.identifier] = value;
+        return Assignment(assignment.variable, value);
       },
 
       [APPLICATION]: (application, transFuncs, state) => {

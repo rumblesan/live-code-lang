@@ -89,7 +89,7 @@ Assignment "assignment"
             inlinableFunctions.push(id);
           }
       }
-      return Ast.Assignment(id, expr);
+      return Ast.Assignment(Ast.Variable(id), expr);
   }
 
 /** Application Rules

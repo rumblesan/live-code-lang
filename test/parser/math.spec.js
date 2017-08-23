@@ -12,7 +12,7 @@ describe('Math', function() {
     var program = 'a = -3';
     var parsed = parser.parse(program);
 
-    var expected = Block([Assignment('a', UnaryOp('-', Num(3)))]);
+    var expected = Block([Assignment(Variable('a'), UnaryOp('-', Num(3)))]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -25,8 +25,8 @@ describe('Math', function() {
     var parsed = parser.parse(program);
 
     var expected = Block([
-      Assignment('a', Num(3)),
-      Assignment('b', UnaryOp('-', Variable('a'))),
+      Assignment(Variable('a'), Num(3)),
+      Assignment(Variable('b'), UnaryOp('-', Variable('a'))),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -37,7 +37,7 @@ describe('Math', function() {
     var parsed = parser.parse(program);
 
     var expected = Block([
-      Assignment('a', UnaryOp('-', BinaryOp('+', Num(3), Num(4)))),
+      Assignment(Variable('a'), UnaryOp('-', BinaryOp('+', Num(3), Num(4)))),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -48,7 +48,10 @@ describe('Math', function() {
     var parsed = parser.parse(program);
 
     var expected = Block([
-      Assignment('a', BinaryOp('+', BinaryOp('+', Num(3), Num(4)), Num(4))),
+      Assignment(
+        Variable('a'),
+        BinaryOp('+', BinaryOp('+', Num(3), Num(4)), Num(4))
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);

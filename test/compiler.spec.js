@@ -23,9 +23,12 @@ import { lambdaLifter } from 'compiler/lambdaLifter';
 describe('Lambda Lifter', function() {
   it('lifts no/simple free variable lambdas', function() {
     const initialAst = Block([
-      Assignment('foo', Lambda(['a'], BinaryOp('*', Variable('a'), Num(2)))),
       Assignment(
-        'bar',
+        Variable('foo'),
+        Lambda(['a'], BinaryOp('*', Variable('a'), Num(2)))
+      ),
+      Assignment(
+        Variable('bar'),
         Lambda(['a'], BinaryOp('*', Variable('a'), Variable('time')))
       ),
     ]);
@@ -33,8 +36,8 @@ describe('Lambda Lifter', function() {
     const expected = Block([
       Func('funcfoo1', ['a'], BinaryOp('*', Variable('a'), Num(2))),
       Func('funcbar2', ['a'], BinaryOp('*', Variable('a'), GlobalVar('time'))),
-      Assignment('foo', FuncPointer('funcfoo1')),
-      Assignment('bar', FuncPointer('funcbar2')),
+      Assignment(Variable('foo'), FuncPointer('funcfoo1')),
+      Assignment(Variable('bar'), FuncPointer('funcbar2')),
     ]);
 
     const globalVars = { time: true };
@@ -45,14 +48,14 @@ describe('Lambda Lifter', function() {
 
   it('lifts more complex free variable lambdas', function() {
     const initialAst = Block([
-      Assignment('x', Num(3)),
+      Assignment(Variable('x'), Num(3)),
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(
           ['a'],
           Block([
             Assignment(
-              'bar',
+              Variable('bar'),
               Lambda(['b'], BinaryOp('*', Variable('b'), Variable('x')))
             ),
             Application('bar', [Variable('a')]),
@@ -73,12 +76,12 @@ describe('Lambda Lifter', function() {
         ['a'],
         ['x'],
         Block([
-          Assignment('bar', ClosurePointer('funcbar1', ['x'])),
+          Assignment(Variable('bar'), ClosurePointer('funcbar1', ['x'])),
           Application('funcbar1', [Variable('a')]),
         ])
       ),
-      Assignment('x', Num(3)),
-      Assignment('foo', ClosurePointer('funcfoo2', ['x'])),
+      Assignment(Variable('x'), Num(3)),
+      Assignment(Variable('foo'), ClosurePointer('funcfoo2', ['x'])),
     ]);
 
     const globalVars = { time: true };
@@ -89,14 +92,14 @@ describe('Lambda Lifter', function() {
 
   it('lifts EVEN more complex nested lambdas', function() {
     const initialAst = Block([
-      Assignment('baz', Num(4)),
+      Assignment(Variable('baz'), Num(4)),
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(
           ['a'],
           Block([
             Assignment(
-              'bar',
+              Variable('bar'),
               Lambda(['b'], BinaryOp('*', Variable('b'), Variable('time')))
             ),
             If(
@@ -117,7 +120,7 @@ describe('Lambda Lifter', function() {
         ['a'],
         ['baz'],
         Block([
-          Assignment('bar', FuncPointer('funcbar1')),
+          Assignment(Variable('bar'), FuncPointer('funcbar1')),
           If(
             Num(1),
             Block([
@@ -126,8 +129,8 @@ describe('Lambda Lifter', function() {
           ),
         ])
       ),
-      Assignment('baz', Num(4)),
-      Assignment('foo', ClosurePointer('funcfoo2', ['baz'])),
+      Assignment(Variable('baz'), Num(4)),
+      Assignment(Variable('foo'), ClosurePointer('funcfoo2', ['baz'])),
     ]);
 
     const globalVars = { time: true };
@@ -138,19 +141,19 @@ describe('Lambda Lifter', function() {
 
   it('finds external assignment variable in lambda', function() {
     const initialAst = Block([
-      Assignment('x', Num(3)),
+      Assignment(Variable('x'), Num(3)),
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda(
           ['a'],
           Block([
             Assignment(
-              'bar',
+              Variable('bar'),
               Lambda(
                 ['b'],
                 Block([
                   Assignment(
-                    'x',
+                    Variable('x'),
                     BinaryOp('*', Variable('b'), Variable('time'))
                   ),
                 ])
@@ -169,7 +172,10 @@ describe('Lambda Lifter', function() {
         ['b'],
         ['x'],
         Block([
-          Assignment('x', BinaryOp('*', Variable('b'), GlobalVar('time'))),
+          Assignment(
+            Variable('x'),
+            BinaryOp('*', Variable('b'), GlobalVar('time'))
+          ),
         ])
       ),
       Closure(
@@ -177,12 +183,12 @@ describe('Lambda Lifter', function() {
         ['a'],
         ['x'],
         Block([
-          Assignment('bar', ClosurePointer('funcbar1', ['x'])),
+          Assignment(Variable('bar'), ClosurePointer('funcbar1', ['x'])),
           Application('funcbar1', [Variable('a')]),
         ])
       ),
-      Assignment('x', Num(3)),
-      Assignment('foo', ClosurePointer('funcfoo2', ['x'])),
+      Assignment(Variable('x'), Num(3)),
+      Assignment(Variable('foo'), ClosurePointer('funcfoo2', ['x'])),
       Application('funcfoo2', [Num(1)]),
     ]);
 

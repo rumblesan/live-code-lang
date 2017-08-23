@@ -126,7 +126,7 @@ internal.evaluateBlock = function(state, block, scope) {
 
 internal.evaluateAssignment = function(state, assignment, scope) {
   var value = internal.evaluate(state, assignment.expression, scope);
-  scope[assignment.identifier] = value;
+  scope[assignment.variable.identifier] = value;
   return value;
 };
 

@@ -52,7 +52,7 @@ describe('Loop', function() {
     });
 
     var expected = Block([
-      Assignment('foo', Num(100)),
+      Assignment(Variable('foo'), Num(100)),
       Times(Variable('foo'), Block([Application('box', [Num(4)])]), 'i'),
     ]);
     assert.deepEqual(parsed, expected);

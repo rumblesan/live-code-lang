@@ -40,13 +40,13 @@ export function Block(elements) {
 }
 
 /**
- *  identifier: Identifier
+ *  variable: Variable
  *  expression: Expression
  */
-export function Assignment(identifier, expression) {
+export function Assignment(variable, expression) {
   return {
     type: ASSIGNMENT,
-    identifier,
+    variable,
     expression,
   };
 }

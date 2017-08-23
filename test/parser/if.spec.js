@@ -29,7 +29,7 @@ describe('If', function() {
     });
 
     var expected = Block([
-      Assignment('a', Num(3)),
+      Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
         Block([Application('box', [])])
@@ -52,7 +52,7 @@ describe('If', function() {
     });
 
     var expected = Block([
-      Assignment('a', Num(3)),
+      Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
         Block([Application('box', [])])
@@ -76,7 +76,7 @@ describe('If', function() {
     });
 
     var expected = Block([
-      Assignment('a', Num(3)),
+      Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
         Block([Application('box', [])]),
@@ -99,7 +99,7 @@ describe('If', function() {
     });
 
     var expected = Block([
-      Assignment('a', Num(3)),
+      Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
         Block([Application('box', [])]),
@@ -126,7 +126,7 @@ describe('If', function() {
     });
 
     var expected = Block([
-      Assignment('a', Num(3)),
+      Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(1)),
         Block([Application('box', [])]),

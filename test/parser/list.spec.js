@@ -17,7 +17,9 @@ describe('List', function() {
       inlinableFunctions: [],
     });
 
-    var expected = Block([Assignment('a', List([Num(1), Num(3), Num(5)]))]);
+    var expected = Block([
+      Assignment(Variable('a'), List([Num(1), Num(3), Num(5)])),
+    ]);
     assert.deepEqual(parsed, expected);
   });
 
@@ -32,8 +34,8 @@ describe('List', function() {
     });
 
     var expected = Block([
-      Assignment('a', List([Num(1), Num(3), Num(5)])),
-      Assignment('b', DeIndex(Variable('a'), Num(0))),
+      Assignment(Variable('a'), List([Num(1), Num(3), Num(5)])),
+      Assignment(Variable('b'), DeIndex(Variable('a'), Num(0))),
     ]);
     assert.deepEqual(parsed, expected);
   });

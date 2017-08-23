@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import { Application, Assignment, Block, Lambda, Num } from 'ast';
+import { Application, Assignment, Block, Lambda, Num, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -17,7 +17,7 @@ describe('Lazy Lambda', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda([], Block([Application('box', [Num(3), Num(4)])]), true)
       ),
     ]);
@@ -38,7 +38,7 @@ describe('Lazy Lambda', function() {
 
     var expected = Block([
       Assignment(
-        'foo',
+        Variable('foo'),
         Lambda([], Block([Application('box', [Num(3), Num(4)])]), true)
       ),
       Application('rotate', [], Block([Application('foo', [])])),
@@ -59,7 +59,7 @@ describe('Lazy Lambda', function() {
 
     var expected = Block([
       Assignment(
-        'bigger',
+        Variable('bigger'),
         Lambda([], Block([Application('scale', [Num(1.1)])]), true),
         true
       ),
