@@ -57,7 +57,7 @@ export const defaultTraverseFunctions = {
   },
   [ASSIGNMENT]: (ast, transFuncs, state) => {
     return Assignment(
-      ast.variable,
+      astTraverse(ast.variable, transFuncs, state),
       astTraverse(ast.expression, transFuncs, state)
     );
   },
