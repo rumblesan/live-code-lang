@@ -5,6 +5,8 @@ import {
   Application,
   If,
   Lambda,
+  Func,
+  Closure,
   Times,
   DoOnce,
   UnaryOp,
@@ -12,6 +14,11 @@ import {
   DeIndex,
   Num,
   Variable,
+  VarPosition,
+  ClosedVarPosition,
+  GlobalVar,
+  FuncPointer,
+  ClosurePointer,
   Str,
   List,
 } from 'ast';
@@ -23,6 +30,8 @@ import {
   APPLICATION,
   IF,
   LAMBDA,
+  FUNC,
+  CLOSURE,
   TIMES,
   DOONCE,
   UNARYOP,
@@ -30,6 +39,11 @@ import {
   DEINDEX,
   NUMBER,
   VARIABLE,
+  VARPOSITION,
+  CLOSEDVARPOSITION,
+  GLOBALVAR,
+  FUNCPOINTER,
+  CLOSUREPOINTER,
   STRING,
   LIST,
 } from 'ast/types';
@@ -68,6 +82,21 @@ export const defaultTraverseFunctions = {
       ast.inlinable
     );
   },
+  [FUNC]: (ast, transFuncs, state) => {
+    return Func(
+      ast.name,
+      ast.argNames.slice(),
+      astTraverse(ast.body, transFuncs, state)
+    );
+  },
+  [CLOSURE]: (ast, transFuncs, state) => {
+    return Closure(
+      ast.name,
+      ast.argNames.slice(),
+      astTraverse(ast.body, transFuncs, state),
+      ast.externalVars.slice()
+    );
+  },
   [TIMES]: (ast, transFuncs, state) => {
     return Times(
       astTraverse(ast.number, transFuncs, state),
@@ -96,6 +125,24 @@ export const defaultTraverseFunctions = {
   },
   [VARIABLE]: ast => {
     return Variable(ast.identifier);
+  },
+  [VARPOSITION]: ast => {
+    return VarPosition(ast.position);
+  },
+  [CLOSEDVARPOSITION]: ast => {
+    return ClosedVarPosition(ast.position);
+  },
+  [GLOBALVAR]: ast => {
+    return GlobalVar(ast.identifier);
+  },
+  [FUNCPOINTER]: ast => {
+    return FuncPointer(ast.funcName);
+  },
+  [CLOSUREPOINTER]: (ast, transFuncs, state) => {
+    return ClosurePointer(
+      ast.funcName,
+      ast.externalVars.map(as => astTraverse(as, transFuncs, state))
+    );
   },
   [STRING]: ast => {
     return Str(ast.value);
