@@ -76,12 +76,15 @@ describe('Lambda Lifter', function() {
         ['a'],
         ['x'],
         Block([
-          Assignment(Variable('bar'), ClosurePointer('funcbar1', ['x'])),
+          Assignment(
+            Variable('bar'),
+            ClosurePointer('funcbar1', [Variable('x')])
+          ),
           Application('funcbar1', [Variable('a')]),
         ])
       ),
       Assignment(Variable('x'), Num(3)),
-      Assignment(Variable('foo'), ClosurePointer('funcfoo2', ['x'])),
+      Assignment(Variable('foo'), ClosurePointer('funcfoo2', [Variable('x')])),
     ]);
 
     const globalVars = { time: true };
@@ -130,7 +133,10 @@ describe('Lambda Lifter', function() {
         ])
       ),
       Assignment(Variable('baz'), Num(4)),
-      Assignment(Variable('foo'), ClosurePointer('funcfoo2', ['baz'])),
+      Assignment(
+        Variable('foo'),
+        ClosurePointer('funcfoo2', [Variable('baz')])
+      ),
     ]);
 
     const globalVars = { time: true };
@@ -183,12 +189,15 @@ describe('Lambda Lifter', function() {
         ['a'],
         ['x'],
         Block([
-          Assignment(Variable('bar'), ClosurePointer('funcbar1', ['x'])),
+          Assignment(
+            Variable('bar'),
+            ClosurePointer('funcbar1', [Variable('x')])
+          ),
           Application('funcbar1', [Variable('a')]),
         ])
       ),
       Assignment(Variable('x'), Num(3)),
-      Assignment(Variable('foo'), ClosurePointer('funcfoo2', ['x'])),
+      Assignment(Variable('foo'), ClosurePointer('funcfoo2', [Variable('x')])),
       Application('funcfoo2', [Num(1)]),
     ]);
 

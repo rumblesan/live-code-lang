@@ -98,7 +98,7 @@ export default function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
               expr.body
             );
           } else {
-            value = ClosurePointer(funcName, expr.freeVars);
+            value = ClosurePointer(funcName, expr.freeVars.map(Variable));
             state.liftedFuncs[funcName] = Closure(
               funcName,
               expr.argNames,
