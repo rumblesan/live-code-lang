@@ -12,11 +12,18 @@ export const LSS = 'LSS'; // Pop top two values, push 1 if first is less than se
 export const JMP = 'JMP'; // Jump to a new position
 export const BCH = 'BCH'; // Pop a value off the stack and jump if it's not zero
 
+// Function Ops
+export const CLL = 'CLL'; // Call a procedure
+export const RTN = 'RTN'; // Return from a procedure
+
 // Stack and Heap manipulation
 export const PSH = 'PSH'; // Push a value onto the stack
 export const POP = 'POP'; // Pop a value off the stack
 export const LOD = 'LOD'; // Load a value from the heap
 export const SAV = 'SAV'; // Save a value to the heap
+
+export const LLD = 'LLD'; // Load a value from a local variable
+export const LSV = 'LSV'; // Save a value to a local variable
 
 // List Ops
 export const LST = 'LST'; // Create a list object
