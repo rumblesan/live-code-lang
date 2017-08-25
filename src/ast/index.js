@@ -14,6 +14,8 @@ import {
   DEINDEX,
   NUMBER,
   VARIABLE,
+  VARPOSITION,
+  CLOSEDVARPOSITION,
   GLOBALVAR,
   FUNCPOINTER,
   CLOSUREPOINTER,
@@ -203,6 +205,26 @@ export function Variable(identifier) {
   return {
     type: VARIABLE,
     identifier,
+  };
+}
+
+/**
+ *  position: number
+ */
+export function VarPosition(position) {
+  return {
+    type: VARPOSITION,
+    position,
+  };
+}
+
+/**
+ *  position: number
+ */
+export function ClosedVarPosition(position) {
+  return {
+    type: CLOSEDVARPOSITION,
+    position,
   };
 }
 
