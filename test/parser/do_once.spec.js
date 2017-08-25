@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import { Application, Block, DoOnce, Num } from 'ast';
+import { Application, Block, DoOnce, Num, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -15,7 +15,9 @@ describe('Do Once', function() {
       inlinableFunctions: ['box'],
     });
 
-    var expected = Block([DoOnce(true, Block([Application('box', [])]))]);
+    var expected = Block([
+      DoOnce(true, Block([Application(Variable('box'), [])])),
+    ]);
     assert.deepEqual(parsed, expected);
   });
 
@@ -26,7 +28,9 @@ describe('Do Once', function() {
       inlinableFunctions: ['box'],
     });
 
-    var expected = Block([DoOnce(false, Block([Application('box', [])]))]);
+    var expected = Block([
+      DoOnce(false, Block([Application(Variable('box'), [])])),
+    ]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -46,7 +50,11 @@ describe('Do Once', function() {
       DoOnce(
         true,
         Block([
-          Application('rotate', [], Block([Application('box', [Num(4)])])),
+          Application(
+            Variable('rotate'),
+            [],
+            Block([Application(Variable('box'), [Num(4)])])
+          ),
         ])
       ),
     ]);
@@ -69,7 +77,11 @@ describe('Do Once', function() {
       DoOnce(
         false,
         Block([
-          Application('rotate', [], Block([Application('box', [Num(4)])])),
+          Application(
+            Variable('rotate'),
+            [],
+            Block([Application(Variable('box'), [Num(4)])])
+          ),
         ])
       ),
     ]);

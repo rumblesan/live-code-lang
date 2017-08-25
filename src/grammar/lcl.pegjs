@@ -103,11 +103,11 @@ Application "application"
 SimpleApplication "simple application"
   = name:FunctionName "(" _ args:ArgumentList? _ ")" {
       var argList =  optionalList(args, 0);
-      return Ast.Application(name, argList);
+      return Ast.Application(Ast.Variable(name), argList);
   }
   / name:FunctionName _ args:ArgumentList? {
       var argList =  optionalList(args, 0);
-      return Ast.Application(name, argList);
+      return Ast.Application(Ast.Variable(name), argList);
   }
 
 FullApplication
@@ -118,7 +118,7 @@ FullApplication
         argList = body.argList;
         block = body.block;
       }
-      return Ast.Application(name, argList, block);
+      return Ast.Application(Ast.Variable(name), argList, block);
   }
 
 ApplicationBody
@@ -149,7 +149,7 @@ Inlinable
 
 InlinedApplication
   = name:InlinableFunction _ body:ApplicationBody {
-      return Ast.Application(name, body.argList, body.block);
+      return Ast.Application(Ast.Variable(name), body.argList, body.block);
   }
 
 ArgumentList

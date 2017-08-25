@@ -54,13 +54,13 @@ export function Assignment(variable, expression) {
 }
 
 /**
- *  identifier: Identifier
- *  args:       [Expression]
+ *  func: Expression
+ *  args: [Expression]
  */
-export function Application(identifier, args, block = Null()) {
+export function Application(func, args, block = Null()) {
   return {
     type: APPLICATION,
-    identifier,
+    func,
     args,
     block,
   };

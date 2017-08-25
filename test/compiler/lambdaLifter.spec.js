@@ -58,7 +58,7 @@ describe('Lambda Lifter', function() {
               Variable('bar'),
               Lambda(['b'], BinaryOp('*', Variable('b'), Variable('x')))
             ),
-            Application('bar', [Variable('a')]),
+            Application(Variable('bar'), [Variable('a')]),
           ])
         )
       ),
@@ -80,7 +80,7 @@ describe('Lambda Lifter', function() {
             Variable('bar'),
             ClosurePointer('funcbar1', [Variable('x')])
           ),
-          Application('funcbar1', [Variable('a')]),
+          Application(Variable('bar'), [Variable('a')]),
         ])
       ),
       Assignment(Variable('x'), Num(3)),
@@ -108,7 +108,9 @@ describe('Lambda Lifter', function() {
             If(
               Num(1),
               Block([
-                Application('bar', [BinaryOp('+', Variable('baz'), Num(2))]),
+                Application(Variable('bar'), [
+                  BinaryOp('+', Variable('baz'), Num(2)),
+                ]),
               ])
             ),
           ])
@@ -127,7 +129,9 @@ describe('Lambda Lifter', function() {
           If(
             Num(1),
             Block([
-              Application('funcbar1', [BinaryOp('+', Variable('baz'), Num(2))]),
+              Application(Variable('bar'), [
+                BinaryOp('+', Variable('baz'), Num(2)),
+              ]),
             ])
           ),
         ])
@@ -165,11 +169,11 @@ describe('Lambda Lifter', function() {
                 ])
               )
             ),
-            Application('bar', [Variable('a')]),
+            Application(Variable('bar'), [Variable('a')]),
           ])
         )
       ),
-      Application('foo', [Num(1)]),
+      Application(Variable('foo'), [Num(1)]),
     ]);
 
     const expected = Block([
@@ -193,12 +197,12 @@ describe('Lambda Lifter', function() {
             Variable('bar'),
             ClosurePointer('funcbar1', [Variable('x')])
           ),
-          Application('funcbar1', [Variable('a')]),
+          Application(Variable('bar'), [Variable('a')]),
         ])
       ),
       Assignment(Variable('x'), Num(3)),
       Assignment(Variable('foo'), ClosurePointer('funcfoo2', [Variable('x')])),
-      Application('funcfoo2', [Num(1)]),
+      Application(Variable('foo'), [Num(1)]),
     ]);
 
     const globalVars = { time: true };

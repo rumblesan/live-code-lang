@@ -61,10 +61,14 @@ describe('Function', function() {
     var expected = Block([
       Assignment(
         Variable('foo'),
-        Lambda([], BinaryOp('*', Num(255), Application('random', [])), false)
+        Lambda(
+          [],
+          BinaryOp('*', Num(255), Application(Variable('random'), [])),
+          false
+        )
       ),
-      Application('fill', [Application('foo', [])]),
-      Application('box', []),
+      Application(Variable('fill'), [Application(Variable('foo'), [])]),
+      Application(Variable('box'), []),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -77,7 +81,7 @@ describe('Function', function() {
       inlinableFunctions: ['box'],
     });
 
-    var expected = Block([Application('box', [Num(1)])]);
+    var expected = Block([Application(Variable('box'), [Num(1)])]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -89,7 +93,7 @@ describe('Function', function() {
       inlinableFunctions: ['box'],
     });
 
-    var expected = Block([Application('box', [])]);
+    var expected = Block([Application(Variable('box'), [])]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -115,7 +119,7 @@ describe('Function', function() {
               Variable('c'),
               BinaryOp('+', Variable('a'), Variable('b'))
             ),
-            Application('box', [Variable('c'), Num(3)]),
+            Application(Variable('box'), [Variable('c'), Num(3)]),
           ]),
           false
         )
@@ -146,8 +150,8 @@ describe('Function', function() {
           Block([
             If(
               BinaryOp('>', Variable('a'), Variable('b')),
-              Block([Application('box', [Variable('a')])]),
-              If(Num(1), Block([Application('box', [Variable('b')])]))
+              Block([Application(Variable('box'), [Variable('a')])]),
+              If(Num(1), Block([Application(Variable('box'), [Variable('b')])]))
             ),
           ]),
           false
@@ -172,8 +176,8 @@ describe('Function', function() {
       ),
       Assignment(
         Variable('bar'),
-        Application('foo', [
-          BinaryOp('+', Num(1), Application('foo', [Num(2)])),
+        Application(Variable('foo'), [
+          BinaryOp('+', Num(1), Application(Variable('foo'), [Num(2)])),
         ])
       ),
     ]);
@@ -195,7 +199,9 @@ describe('Function', function() {
       ),
       Assignment(
         Variable('bar'),
-        Application('foo', [Application('foo', [Num(1), Num(2), Num(3)])])
+        Application(Variable('foo'), [
+          Application(Variable('foo'), [Num(1), Num(2), Num(3)]),
+        ])
       ),
     ]);
 
@@ -223,14 +229,14 @@ describe('Function', function() {
               '-',
               BinaryOp(
                 '/',
-                Application('noise', [
+                Application(Variable('noise'), [
                   BinaryOp(
                     '*',
                     Variable('x'),
-                    Application('abs', [
+                    Application(Variable('abs'), [
                       BinaryOp(
                         '*',
-                        Application('sin', [
+                        Application(Variable('sin'), [
                           BinaryOp('+', Variable('time'), Variable('y')),
                         ]),
                         Variable('movmentSpeed')
@@ -258,7 +264,7 @@ describe('Function', function() {
     });
 
     var expected = Block([
-      Application('box', [
+      Application(Variable('box'), [
         BinaryOp('+', BinaryOp('+', Num(3), Num(4)), Num(2)),
       ]),
     ]);
@@ -274,7 +280,7 @@ describe('Function', function() {
     });
 
     var expected = Block([
-      Application('box', [
+      Application(Variable('box'), [
         BinaryOp('+', Num(3), Num(4)),
         BinaryOp('*', Variable('a'), Num(2)),
       ]),
@@ -291,7 +297,7 @@ describe('Function', function() {
     });
 
     var expected = Block([
-      Application('box', [
+      Application(Variable('box'), [
         BinaryOp('*', BinaryOp('+', Num(3), Num(4)), Num(2)),
         BinaryOp('*', Variable('a'), Num(2)),
       ]),
@@ -308,7 +314,11 @@ describe('Function', function() {
     });
 
     var expected = Block([
-      Application('rotate', [Num(2)], Block([Application('box', [Num(3)])])),
+      Application(
+        Variable('rotate'),
+        [Num(2)],
+        Block([Application(Variable('box'), [Num(3)])])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -321,7 +331,9 @@ describe('Function', function() {
       inlinableFunctions: ['box'],
     });
 
-    var expected = Block([Application('box', [Application('bar', [Num(3)])])]);
+    var expected = Block([
+      Application(Variable('box'), [Application(Variable('bar'), [Num(3)])]),
+    ]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -340,15 +352,15 @@ describe('Function', function() {
     var expected = Block([
       Assignment(
         Variable('a'),
-        Application('bar', [BinaryOp('+', Num(3), Num(1))])
+        Application(Variable('bar'), [BinaryOp('+', Num(3), Num(1))])
       ),
       Assignment(
         Variable('b'),
-        BinaryOp('+', Application('bar', [Num(3)]), Num(1))
+        BinaryOp('+', Application(Variable('bar'), [Num(3)]), Num(1))
       ),
       Assignment(
         Variable('c'),
-        Application('bar', [BinaryOp('+', Num(3), Num(1))])
+        Application(Variable('bar'), [BinaryOp('+', Num(3), Num(1))])
       ),
     ]);
 
@@ -364,17 +376,17 @@ describe('Function', function() {
 
     var expected = Block([
       Application(
-        'rotate',
+        Variable('rotate'),
         [Num(2)],
         Block([
           Application(
-            'fill',
+            Variable('fill'),
             [Variable('red')],
             Block([
               Application(
-                'box',
+                Variable('box'),
                 [Num(3), Num(4)],
-                Block([Application('peg', [Num(2)])])
+                Block([Application(Variable('peg'), [Num(2)])])
               ),
             ])
           ),
@@ -398,25 +410,25 @@ describe('Function', function() {
     var expected = Block([
       Assignment(Variable('a'), Num(3)),
       Application(
-        'rotate',
+        Variable('rotate'),
         [],
         Block([
           Application(
-            'scale',
+            Variable('scale'),
             [],
             Block([
               Application(
-                'move',
+                Variable('move'),
                 [Variable('a')],
                 Block([
                   Application(
-                    'rotate',
+                    Variable('rotate'),
                     [],
                     Block([
                       Application(
-                        'box',
+                        Variable('box'),
                         [Num(3), Num(4)],
-                        Block([Application('peg', [Num(2)])])
+                        Block([Application(Variable('peg'), [Num(2)])])
                       ),
                     ])
                   ),
@@ -440,9 +452,9 @@ describe('Function', function() {
 
     var expected = Block([
       Application(
-        'scale',
-        [Application('wave', [])],
-        Block([Application('box', [])])
+        Variable('scale'),
+        [Application(Variable('wave'), [])],
+        Block([Application(Variable('box'), [])])
       ),
     ]);
 
@@ -458,9 +470,9 @@ describe('Function', function() {
 
     var expected = Block([
       Application(
-        'scale',
-        [Application('wave', [Application('wave', [])])],
-        Block([Application('box', [])])
+        Variable('scale'),
+        [Application(Variable('wave'), [Application(Variable('wave'), [])])],
+        Block([Application(Variable('box'), [])])
       ),
     ]);
 

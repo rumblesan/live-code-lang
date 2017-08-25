@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import { Application, Block, Num } from 'ast';
+import { Application, Block, Num, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -30,7 +30,7 @@ describe('Comments', function() {
                          `);
     var parsed = parser.parse(program, { functionNames: ['box'] });
 
-    var expected = Block([Application('box', [Num(4)])]);
+    var expected = Block([Application(Variable('box'), [Num(4)])]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -43,7 +43,7 @@ describe('Comments', function() {
                          `);
     var parsed = parser.parse(program, { functionNames: ['box'] });
 
-    var expected = Block([Application('box', [Num(4)])]);
+    var expected = Block([Application(Variable('box'), [Num(4)])]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -61,8 +61,8 @@ describe('Comments', function() {
     var parsed = parser.parse(program, { functionNames: ['box', 'peg'] });
 
     var expected = Block([
-      Application('box', [Num(4)]),
-      Application('peg', [Num(3)]),
+      Application(Variable('box'), [Num(4)]),
+      Application(Variable('peg'), [Num(3)]),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -76,7 +76,7 @@ describe('Comments', function() {
                          `);
     var parsed = parser.parse(program, { functionNames: ['box'] });
 
-    var expected = Block([Application('box', [Num(4)])]);
+    var expected = Block([Application(Variable('box'), [Num(4)])]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -97,7 +97,11 @@ describe('Comments', function() {
     });
 
     var expected = Block([
-      Application('rotate', [], Block([Application('peg', [Num(3)])])),
+      Application(
+        Variable('rotate'),
+        [],
+        Block([Application(Variable('peg'), [Num(3)])])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);

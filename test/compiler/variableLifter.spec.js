@@ -59,7 +59,7 @@ describe('Variable Lifter', function() {
             Variable('bar'),
             ClosurePointer('funcbar1', [Variable('x')])
           ),
-          Application('funcbar1', [Variable('a')]),
+          Application(Variable('bar'), [Variable('a')]),
         ])
       ),
       Assignment(Variable('x'), Num(3)),
@@ -82,7 +82,7 @@ describe('Variable Lifter', function() {
             VarPosition(1),
             ClosurePointer('funcbar1', [ClosedVarPosition(0)])
           ),
-          Application('funcbar1', [VarPosition(0)]),
+          Application(VarPosition(1), [VarPosition(0)]),
         ])
       ),
       Assignment(VarPosition(0), Num(3)),
@@ -106,7 +106,9 @@ describe('Variable Lifter', function() {
           If(
             Num(1),
             Block([
-              Application('funcbar1', [BinaryOp('+', Variable('baz'), Num(2))]),
+              Application(Variable('bar'), [
+                BinaryOp('+', Variable('baz'), Num(2)),
+              ]),
             ])
           ),
         ])
@@ -129,7 +131,7 @@ describe('Variable Lifter', function() {
           If(
             Num(1),
             Block([
-              Application('funcbar1', [
+              Application(VarPosition(1), [
                 BinaryOp('+', ClosedVarPosition(0), Num(2)),
               ]),
             ])

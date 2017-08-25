@@ -1,5 +1,4 @@
 import {
-  Null,
   Block,
   Assignment,
   Application,
@@ -122,18 +121,8 @@ export default function lambdaLifter(ast, globalVars = {}, globalFuncs = {}) {
         const args = application.args.map(a =>
           astTraverse(a, transFuncs, state)
         );
-        if (state.scope[application.identifier]) {
-          const fp = state.scope[application.identifier];
-          // Locally defined lambda
-          return Application(fp.funcName, args, application.block);
-        } else if (state.globalFuncs[application.identifier]) {
-          const fp = state.globalFuncs[application.identifier];
-          // Locally defined lambda
-          return Application(fp.funcName, args, application.block);
-        } else {
-          // We don't know where this function is....
-          return Null();
-        }
+        const func = astTraverse(application.func, transFuncs, state);
+        return Application(func, args, application.block);
       },
 
       [LAMBDA]: (lambda, transFuncs, state) => {

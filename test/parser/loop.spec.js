@@ -19,7 +19,7 @@ describe('Loop', function() {
     });
 
     var expected = Block([
-      Times(Num(4), Block([Application('box', [Num(4)])])),
+      Times(Num(4), Block([Application(Variable('box'), [Num(4)])])),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -35,7 +35,7 @@ describe('Loop', function() {
     });
 
     var expected = Block([
-      Times(Num(4), Block([Application('box', [Num(4)])]), 'i'),
+      Times(Num(4), Block([Application(Variable('box'), [Num(4)])]), 'i'),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -53,7 +53,11 @@ describe('Loop', function() {
 
     var expected = Block([
       Assignment(Variable('foo'), Num(100)),
-      Times(Variable('foo'), Block([Application('box', [Num(4)])]), 'i'),
+      Times(
+        Variable('foo'),
+        Block([Application(Variable('box'), [Num(4)])]),
+        'i'
+      ),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -66,7 +70,10 @@ describe('Loop', function() {
     });
 
     var expected = Block([
-      Times(Num(4), Block([Times(Num(3), Block([Application('box', [])]))])),
+      Times(
+        Num(4),
+        Block([Times(Num(3), Block([Application(Variable('box'), [])]))])
+      ),
     ]);
     assert.deepEqual(parsed, expected);
   });

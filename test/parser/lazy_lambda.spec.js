@@ -18,7 +18,11 @@ describe('Lazy Lambda', function() {
     var expected = Block([
       Assignment(
         Variable('foo'),
-        Lambda([], Block([Application('box', [Num(3), Num(4)])]), true)
+        Lambda(
+          [],
+          Block([Application(Variable('box'), [Num(3), Num(4)])]),
+          true
+        )
       ),
     ]);
 
@@ -39,9 +43,17 @@ describe('Lazy Lambda', function() {
     var expected = Block([
       Assignment(
         Variable('foo'),
-        Lambda([], Block([Application('box', [Num(3), Num(4)])]), true)
+        Lambda(
+          [],
+          Block([Application(Variable('box'), [Num(3), Num(4)])]),
+          true
+        )
       ),
-      Application('rotate', [], Block([Application('foo', [])])),
+      Application(
+        Variable('rotate'),
+        [],
+        Block([Application(Variable('foo'), [])])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -60,13 +72,19 @@ describe('Lazy Lambda', function() {
     var expected = Block([
       Assignment(
         Variable('bigger'),
-        Lambda([], Block([Application('scale', [Num(1.1)])]), true),
+        Lambda([], Block([Application(Variable('scale'), [Num(1.1)])]), true),
         true
       ),
       Application(
-        'rotate',
+        Variable('rotate'),
         [],
-        Block([Application('bigger', [], Block([Application('box', [])]))])
+        Block([
+          Application(
+            Variable('bigger'),
+            [],
+            Block([Application(Variable('box'), [])])
+          ),
+        ])
       ),
     ]);
 

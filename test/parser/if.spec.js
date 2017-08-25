@@ -32,7 +32,7 @@ describe('If', function() {
       Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
-        Block([Application('box', [])])
+        Block([Application(Variable('box'), [])])
       ),
     ]);
 
@@ -55,7 +55,7 @@ describe('If', function() {
       Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
-        Block([Application('box', [])])
+        Block([Application(Variable('box'), [])])
       ),
     ]);
 
@@ -79,8 +79,8 @@ describe('If', function() {
       Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
-        Block([Application('box', [])]),
-        If(Num(1), Block([Application('peg', [])]))
+        Block([Application(Variable('box'), [])]),
+        If(Num(1), Block([Application(Variable('peg'), [])]))
       ),
     ]);
 
@@ -102,10 +102,10 @@ describe('If', function() {
       Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(3)),
-        Block([Application('box', [])]),
-        Block([Application('peg', [Num(1)])])
+        Block([Application(Variable('box'), [])]),
+        Block([Application(Variable('peg'), [Num(1)])])
       ),
-      Application('box', []),
+      Application(Variable('box'), []),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -129,11 +129,11 @@ describe('If', function() {
       Assignment(Variable('a'), Num(3)),
       If(
         BinaryOp('==', Variable('a'), Num(1)),
-        Block([Application('box', [])]),
+        Block([Application(Variable('box'), [])]),
         If(
           BinaryOp('==', Variable('a'), Num(2)),
-          Block([Application('ball', [])]),
-          If(Num(1), Block([Application('peg', [])]))
+          Block([Application(Variable('ball'), [])]),
+          If(Num(1), Block([Application(Variable('peg'), [])]))
         )
       ),
     ]);
@@ -155,13 +155,13 @@ describe('If', function() {
 
     var expected = Block([
       Application(
-        'rotate',
+        Variable('rotate'),
         [],
         Block([
           If(
             Num(1),
-            Block([Application('box', [])]),
-            If(Num(1), Block([Application('peg', [])]))
+            Block([Application(Variable('box'), [])]),
+            If(Num(1), Block([Application(Variable('peg'), [])]))
           ),
         ])
       ),
@@ -184,9 +184,15 @@ describe('If', function() {
     var expected = Block([
       If(
         BinaryOp('<', BinaryOp('%', Variable('time'), Num(10)), Num(5)),
-        Block([Application('ambientLight', [Num(255), Num(255), Num(255)])])
+        Block([
+          Application(Variable('ambientLight'), [Num(255), Num(255), Num(255)]),
+        ])
       ),
-      Application('rotate', [], Block([Application('box', [])])),
+      Application(
+        Variable('rotate'),
+        [],
+        Block([Application(Variable('box'), [])])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);

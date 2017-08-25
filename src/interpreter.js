@@ -131,13 +131,11 @@ internal.evaluateAssignment = function(state, assignment, scope) {
 };
 
 internal.evaluateApplication = function(state, application, scope) {
-  var func, funcname, args, evaledargs, output, i, block;
+  var func, args, evaledargs, output, i, block;
 
-  funcname = application.identifier;
-
-  func = scope[funcname];
+  func = internal.evaluate(state, application.func, scope);
   if (!exists(func)) {
-    throw 'Function not defined: ' + funcname;
+    throw 'Cannot evaluate NULL function';
   }
 
   evaledargs = [];
@@ -180,7 +178,7 @@ internal.evaluateApplication = function(state, application, scope) {
     // as a lambda
     output = func.func(evaledargs);
   } else {
-    throw 'Error interpreting function: ' + funcname;
+    throw 'Error interpreting function';
   }
 
   return output;

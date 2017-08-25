@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import parser from 'grammar/lcl';
-import { Application, Block, DoOnce, Num } from 'ast';
+import { Application, Block, DoOnce, Num, Variable } from 'ast';
 
 import { dedent } from 'dentist';
 
@@ -17,8 +17,8 @@ describe('Block', function() {
     var parsed = parser.parse(program, { functionNames: ['peg', 'box'] });
 
     var expected = Block([
-      DoOnce(true, Block([Application('box', [Num(4)])])),
-      Application('peg', [Num(3), Num(4)]),
+      DoOnce(true, Block([Application(Variable('box'), [Num(4)])])),
+      Application(Variable('peg'), [Num(3), Num(4)]),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -44,13 +44,17 @@ describe('Block', function() {
           DoOnce(
             true,
             Block([
-              Application('rotate', [], Block([Application('box', [Num(4)])])),
+              Application(
+                Variable('rotate'),
+                [],
+                Block([Application(Variable('box'), [Num(4)])])
+              ),
             ])
           ),
-          Application('peg', [Num(4)]),
+          Application(Variable('peg'), [Num(4)]),
         ])
       ),
-      Application('ball', [Num(2)]),
+      Application(Variable('ball'), [Num(2)]),
     ]);
     assert.deepEqual(parsed, expected);
   });

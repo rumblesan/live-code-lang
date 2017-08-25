@@ -114,11 +114,14 @@ describe('Interpreter', function() {
         Variable('b'),
         Lambda(['x', 'y'], BinaryOp('+', Variable('x'), Variable('y')))
       ),
-      Application('result', [
+      Application(Variable('result'), [
         BinaryOp(
           '+',
-          Application('b', [Application('a', [Num(2)]), Num(3)]),
-          Application('a', [Num(1)])
+          Application(Variable('b'), [
+            Application(Variable('a'), [Num(2)]),
+            Num(3),
+          ]),
+          Application(Variable('a'), [Num(1)])
         ),
       ]),
     ]);

@@ -63,7 +63,7 @@ export const defaultTraverseFunctions = {
   },
   [APPLICATION]: (ast, transFuncs, state) => {
     return Application(
-      ast.identifier,
+      astTraverse(ast.func, transFuncs, state),
       ast.args.map(a => astTraverse(a, transFuncs, state)),
       astTraverse(ast.block, transFuncs, state)
     );

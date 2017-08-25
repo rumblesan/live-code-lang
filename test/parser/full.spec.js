@@ -24,7 +24,7 @@ describe('Parser', function() {
                          `);
     var parsed = parser.parse(program, { functionNames: ['box'] });
 
-    var expected = Block([Application('box', [])]);
+    var expected = Block([Application(Variable('box'), [])]);
 
     assert.deepEqual(parsed, expected);
   });
@@ -41,7 +41,11 @@ describe('Parser', function() {
     });
 
     var expected = Block([
-      Application('rotate', [Num(2), Num(3)], Block([Application('box', [])])),
+      Application(
+        Variable('rotate'),
+        [Num(2), Num(3)],
+        Block([Application(Variable('box'), [])])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -57,7 +61,11 @@ describe('Parser', function() {
     });
 
     var expected = Block([
-      Application('rotate', [Num(2), Num(3)], Block([Application('box', [])])),
+      Application(
+        Variable('rotate'),
+        [Num(2), Num(3)],
+        Block([Application(Variable('box'), [])])
+      ),
     ]);
 
     assert.deepEqual(parsed, expected);
@@ -73,13 +81,13 @@ describe('Parser', function() {
 
     var expected = Block([
       Application(
-        'rotate',
+        Variable('rotate'),
         [Num(2), Num(3)],
         Block([
           Application(
-            'fill',
+            Variable('fill'),
             [Variable('red')],
-            Block([Application('box', [])])
+            Block([Application(Variable('box'), [])])
           ),
         ])
       ),
@@ -99,13 +107,13 @@ describe('Parser', function() {
 
     var expected = Block([
       Application(
-        'rotate',
+        Variable('rotate'),
         [Num(2), Num(3)],
         Block([
           Application(
-            'fill',
+            Variable('fill'),
             [Variable('red')],
-            Block([Application('box', [])])
+            Block([Application(Variable('box'), [])])
           ),
         ])
       ),
@@ -126,17 +134,17 @@ describe('Parser', function() {
 
     var expected = Block([
       Application(
-        'scale',
-        [Num(2), Application('wave', [Num(2)])],
+        Variable('scale'),
+        [Num(2), Application(Variable('wave'), [Num(2)])],
         Block([
           Application(
-            'peg',
+            Variable('peg'),
             [],
             Block([
               Application(
-                'scale',
-                [Num(2), Application('wave', [Num(2)])],
-                Block([Application('ball', [])])
+                Variable('scale'),
+                [Num(2), Application(Variable('wave'), [Num(2)])],
+                Block([Application(Variable('ball'), [])])
               ),
             ])
           ),
@@ -156,12 +164,12 @@ describe('Parser', function() {
 
     var expected = Block([
       Application(
-        'rotate',
+        Variable('rotate'),
         [],
         Block([
           Times(
-            BinaryOp('+', Application('wave', []), Num(2)),
-            Block([Application('box', [])])
+            BinaryOp('+', Application(Variable('wave'), []), Num(2)),
+            Block([Application(Variable('box'), [])])
           ),
         ])
       ),
