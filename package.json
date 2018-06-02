@@ -9,32 +9,35 @@
   },
   "repository": "rumblesan/livecodelang",
   "scripts": {
-    "build": "webpack --env build",
-    "dev": "webpack --progress --colors --watch --env dev",
-    "test": "mocha-webpack \"test/**/*.spec.js\"",
+    "lint": "eslint src",
+    "build": "webpack-cli --mode production",
+    "build:dev": "webpack-cli --mode development",
+    "dev": "webpack-cli --progress --colors --watch --mode development",
+    "test": "jest test",
     "posttest": "npm run lint",
-    "lint": "eslint .",
-    "test:watch": "mocha-webpack --webpack-config webpack.config.js -w \"test/**/*.spec.js\"",
+    "test:watch": "mocha-webpack -w \"test/**/*.spec.js\"",
     "prettier": "prettier --single-quote --trailing-comma es5"
   },
   "devDependencies": {
-    "babel-core": "^6.25.0",
-    "babel-eslint": "^7.2.3",
-    "babel-loader": "^7.1.1",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-core": "6.26.3",
+    "babel-eslint": "7.2.3",
+    "babel-jest": "^23.0.1",
+    "babel-loader": "7.1.4",
+    "babel-polyfill": "6.23.0",
+    "babel-preset-env": "^1.7.0",
     "dentist": "1.0.3",
-    "eslint": "^4.3.0",
-    "eslint-config-prettier": "^2.3.0",
-    "eslint-plugin-prettier": "^2.1.2",
-    "mocha": "^3.1.2",
-    "mocha-webpack": "^0.7.0",
-    "pegjs": "^0.10.0",
-    "pegjs-loader": "^0.5.1",
-    "prettier": "^1.5.3",
-    "webpack": "^2.7.0"
+    "eslint": "4.19.1",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-plugin-prettier": "2.6.0",
+    "jest": "^23.1.0",
+    "prettier": "1.13.4",
+    "webpack": "4.10.2",
+    "webpack-cli": "^3.0.0"
   },
   "dependencies": {
-    "underscore": "^1.8.3"
+    "canto34": "^2.0.1"
+  },
+  "jest": {
+    "modulePaths": ["src"]
   }
 }

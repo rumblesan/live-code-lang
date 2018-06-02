@@ -1,26 +1,19 @@
 import {
-  NULL,
-  BLOCK,
-  ASSIGNMENT,
   APPLICATION,
+  ASSIGNMENT,
+  BINARYOP,
+  BLOCK,
+  DEINDEX,
   IF,
   LAMBDA,
-  FUNC,
-  CLOSURE,
-  TIMES,
-  DOONCE,
-  UNARYOP,
-  BINARYOP,
-  DEINDEX,
-  NUMBER,
-  VARIABLE,
-  VARPOSITION,
-  CLOSEDVARPOSITION,
-  GLOBALVAR,
-  FUNCPOINTER,
-  CLOSUREPOINTER,
-  STRING,
   LIST,
+  NUMBER,
+  NULL,
+  RETURN,
+  STRING,
+  TIMES,
+  UNARYOP,
+  VARIABLE,
 } from './types';
 
 /**
@@ -54,15 +47,14 @@ export function Assignment(variable, expression) {
 }
 
 /**
- *  func: Expression
+ *  func: Identifier
  *  args: [Expression]
  */
-export function Application(func, args, block = Null()) {
+export function Application(func, args) {
   return {
     type: APPLICATION,
     func,
     args,
-    block,
   };
 }
 
@@ -85,43 +77,21 @@ export function If(predicate, ifBlock, elseBlock = Null()) {
  *  body:      Block
  *  inlinable: Boolean
  */
-export function Lambda(argNames, body, inlinable = false, freeVars = []) {
+export function Lambda(argNames, body) {
   return {
     type: LAMBDA,
     argNames,
     body,
-    inlinable,
-    freeVars,
   };
 }
 
 /**
- *  name:      Identifier
- *  argNames:  [Identifier]
- *  body:      Block
+ *  value:  Expression
  */
-export function Func(name, argNames, body) {
+export function Return(value) {
   return {
-    type: FUNC,
-    name,
-    argNames,
-    body,
-  };
-}
-
-/**
- *  name:         Identifier
- *  argNames:     [Identifier]
- *  externalVars: [Identifier]
- *  body:         Block
- */
-export function Closure(name, argNames, externalVars, body) {
-  return {
-    type: CLOSURE,
-    name,
-    argNames,
-    externalVars,
-    body,
+    type: RETURN,
+    value,
   };
 }
 
@@ -136,17 +106,6 @@ export function Times(number, block, loopVar = Null()) {
     number,
     block,
     loopVar,
-  };
-}
-
-/**
- *  block: Block
- */
-export function DoOnce(active, block = Null()) {
-  return {
-    type: DOONCE,
-    active,
-    block,
   };
 }
 
@@ -205,58 +164,6 @@ export function Variable(identifier) {
   return {
     type: VARIABLE,
     identifier,
-  };
-}
-
-/**
- *  position: number
- */
-export function VarPosition(position) {
-  return {
-    type: VARPOSITION,
-    position,
-  };
-}
-
-/**
- *  position: number
- */
-export function ClosedVarPosition(position) {
-  return {
-    type: CLOSEDVARPOSITION,
-    position,
-  };
-}
-
-/**
- *  value: Identifier
- */
-export function GlobalVar(identifier) {
-  return {
-    type: GLOBALVAR,
-    identifier,
-  };
-}
-
-/**
- *  funcname: Identifier
- */
-export function FuncPointer(funcName) {
-  return {
-    type: FUNCPOINTER,
-    funcName,
-  };
-}
-
-/**
- *  funcname: Identifier
- *  externalVars: [Identifier]
- */
-export function ClosurePointer(funcName, externalVars) {
-  return {
-    type: CLOSUREPOINTER,
-    funcName,
-    externalVars,
   };
 }
 
