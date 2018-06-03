@@ -15,7 +15,7 @@
     "dev": "webpack-cli --progress --colors --watch --mode development",
     "test": "jest test",
     "posttest": "npm run lint",
-    "test:watch": "mocha-webpack -w \"test/**/*.spec.js\"",
+    "test:watch": "jest test --watch",
     "prettier": "prettier --single-quote --trailing-comma es5"
   },
   "devDependencies": {
