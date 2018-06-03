@@ -4,6 +4,12 @@ const types = canto34.StandardTokenTypes;
 
 const lexer = new canto34.Lexer({ languageName: 'live-code-lang' });
 
+const comment = () => ({
+  name: 'comment',
+  ignore: true,
+  regexp: /^\/\/[^\n]*/,
+});
+
 const newline = () => ({
   name: 'newline',
   regexp: /^\n[ \n]*/,
@@ -16,20 +22,34 @@ const identifier = () => ({
 
 const operator = () => ({
   name: 'operator',
-  regexp: /^[*/+-]+/,
+  regexp: /^[<>^%*/+-]+/,
 });
 
-lexer.addTokenType(newline());
-lexer.addTokenType(types.whitespace());
+const comparrisonOperator = () => ({
+  name: 'operator',
+  regexp: /^==/,
+});
 
+lexer.addTokenType(types.whitespace());
+lexer.addTokenType(newline());
+lexer.addTokenType(comment());
+
+lexer.addTokenType(types.constant('if', 'if'));
+lexer.addTokenType(types.constant('else', 'else'));
 lexer.addTokenType(types.constant('return', 'return'));
 lexer.addTokenType(types.constant('=>', 'function arrow'));
+
+// needs to come before assignment
+lexer.addTokenType(comparrisonOperator());
 lexer.addTokenType(types.constant('=', 'assignment'));
+
 lexer.addTokenType(types.comma());
 lexer.addTokenType(types.openParen());
 lexer.addTokenType(types.closeParen());
 lexer.addTokenType(types.openBracket());
 lexer.addTokenType(types.closeBracket());
+lexer.addTokenType(types.openSquareBracket());
+lexer.addTokenType(types.closeSquareBracket());
 
 lexer.addTokenType(operator());
 

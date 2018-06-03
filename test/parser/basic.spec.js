@@ -1,7 +1,6 @@
 /* global describe, it */
 
 import parser from 'parser';
-import lexer from 'parser/lexer';
 
 import {
   Application,
@@ -29,14 +28,12 @@ describe('Basics', function() {
                            box(a(2, c))
                            `);
 
-    const tokens = lexer.tokenize(program);
-    parser.initialize(tokens);
-    const parsed = parser.program();
+    const parsed = parser.parse(program);
 
     const expected = Block([
-      Assignment('c', Num(3.4)),
+      Assignment(Variable('c'), Num(3.4)),
       Assignment(
-        'a',
+        Variable('a'),
         Lambda(
           ['b', 'd'],
           Block([
@@ -50,7 +47,9 @@ describe('Basics', function() {
           ])
         )
       ),
-      Application('box', [Application('a', [Num(2), Variable('c')])]),
+      Application(Variable('box'), [
+        Application(Variable('a'), [Num(2), Variable('c')]),
+      ]),
     ]);
 
     assert.deepEqual(parsed, expected);

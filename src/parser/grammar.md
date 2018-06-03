@@ -12,11 +12,18 @@ EOF = NewLine End | End
 
 Statement = Assignment
           | Application
+          | If
           | Return
 
 Assignment = Identifier '=' Expression
 
 Application = Identifier '(' ArgList? ')'
+
+If = IfBlock ElseBlock?
+
+IfBlock = 'if' Expression OpenBracket NewLine Statements CloseBracket
+
+ElseBlock = 'else' OpenBracket NewLine Statements CloseBracket
 
 Return = 'return' Expression
 
@@ -24,6 +31,7 @@ ArgList = Expression
         | Expression ',' ArgList
 
 Expression = Number
+           | '-' Expression
            | Variable
            | Lambda
            | Application
@@ -31,9 +39,10 @@ Expression = Number
 
 Arithmatic = Expression Operator Expression
 
-Operator = '*' | '/' | '+' | '-'
+Operator = '==' | '^' | '*' | '/' | '+' | '-' | '%' | '<' | '>' | '<=' | '>='
 
-Lambda = '(' NameList? ')' '=>' OpenBracket Statements CloseBracket
+Lambda = '(' NameList? ')' '=>' OpenBracket NewLine Statements CloseBracket
+       | '(' NameList? ')' '=>' OpenBracket Expression CloseBracket
 
 NameList = Identifier | Identifier ',' NameList
 ```
