@@ -13,6 +13,7 @@ EOF = NewLine End | End
 Statement = Assignment
           | Application
           | If
+          | Loop
           | Return
 
 Assignment = Identifier '=' Expression
@@ -24,6 +25,9 @@ If = IfBlock ElseBlock?
 IfBlock = 'if' Expression OpenBracket NewLine Statements CloseBracket
 
 ElseBlock = 'else' OpenBracket NewLine Statements CloseBracket
+
+Loop = 'loop' Expression 'times' OpenBracket Newline Statements CloseBracket
+     | 'loop' Expression 'times' 'with' Identifier OpenBracket Newline Statements CloseBracket
 
 Return = 'return' Expression
 

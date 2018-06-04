@@ -16,6 +16,60 @@ const exprListToArgs = exprList => {
   });
 };
 
+class ArithmaticShunter {
+  constructor() {
+    this.operatorStack = [];
+    this.output = [];
+    this.precedences = {
+      '^': 15,
+      '*': 14,
+      '/': 14,
+      '%': 14,
+      '+': 13,
+      '-': 13,
+      '<': 11,
+      '<=': 11,
+      '>': 11,
+      '>=': 11,
+      '==': 10,
+      '!=': 10,
+      '&&': 6,
+      '||': 5,
+    };
+  }
+  shuntValue(value) {
+    this.output.push(value);
+  }
+  collapseOp(op) {
+    const v2 = this.output.pop();
+    const v1 = this.output.pop();
+    const expr = ast.BinaryOp(op, v1, v2);
+    this.output.push(expr);
+  }
+  shuntOp(newOp) {
+    if (!this.precedences[newOp]) {
+      throw new ParserException(`${newOp} is not a valid operator`);
+    }
+    const peekOp = this.operatorStack[this.operatorStack.length - 1];
+    if (this.precedences[newOp] <= this.precedences[peekOp]) {
+      const topOp = this.operatorStack.pop();
+      this.collapseOp(topOp);
+    }
+    this.operatorStack.push(newOp);
+  }
+  getOutput() {
+    while (this.operatorStack.length > 0) {
+      this.collapseOp(this.operatorStack.pop());
+    }
+    if (this.output.length !== 1) {
+      throw new ParserException(
+        'Should only be a single expression in shunter output'
+      );
+    }
+    return this.output.pop();
+  }
+}
+
 class Parser {
   initialize(tokens) {
     if (!tokens) {
@@ -84,15 +138,6 @@ class Parser {
     }
   }
 }
-
-/*
- *const precedence = {
- *  '*': 9,
- *  '/': 9,
- *  '+': 8,
- *  '-': 8,
- *};
- */
 
 const parser = new Parser();
 
@@ -197,27 +242,53 @@ parser.exprList = function() {
 };
 
 parser.expression = function() {
-  let expr1;
+  let expr = this.baseExpression();
+  if (!this.eof() && this.la1('open square bracket')) {
+    expr = this.deindex(expr);
+  }
+  if (!this.eof() && this.la1('operator')) {
+    expr = this.arithmatic(expr);
+  }
+  return expr;
+};
+
+parser.deindex = function(expr) {
+  this.match('open square bracket');
+  const deIndexExpr = this.expression();
+  this.match('close square bracket');
+  return ast.DeIndex(expr, deIndexExpr);
+};
+
+parser.arithmatic = function(firstExpr) {
+  const shunter = new ArithmaticShunter();
+  shunter.shuntValue(firstExpr);
+  while (!this.eof() && this.la1('operator')) {
+    shunter.shuntOp(this.match('operator').content);
+    shunter.shuntValue(this.baseExpression());
+  }
+  return shunter.getOutput();
+};
+
+parser.baseExpression = function() {
+  let expr;
   if (this.la1('open square bracket')) {
-    expr1 = this.list();
+    expr = this.list();
   } else if (this.la1('floating point')) {
-    expr1 = ast.Num(this.match('floating point').content);
+    expr = ast.Num(this.match('floating point').content);
   } else if (this.la1('integer')) {
-    expr1 = ast.Num(this.match('integer').content);
+    expr = ast.Num(this.match('integer').content);
   } else if (this.la1('operator')) {
-    const op = this.match('operator').content;
-    const expr = this.expression();
-    expr1 = ast.UnaryOp(op, expr);
+    expr = ast.UnaryOp(this.match('operator').content, this.expression());
   } else if (this.la1('identifier')) {
-    expr1 = ast.Variable(this.match('identifier').content);
+    expr = ast.Variable(this.match('identifier').content);
     if (this.eof()) {
-      return expr1;
+      return expr;
     }
     if (this.la1('open paren')) {
       this.match('open paren');
       const args = this.exprList();
       this.match('close paren');
-      expr1 = ast.Application(expr1, args);
+      expr = ast.Application(expr, args);
     }
   } else if (this.la1('open paren')) {
     this.match('open paren');
@@ -245,26 +316,11 @@ parser.expression = function() {
       if (maybeList.length >= 2) {
         throw new ParserException('No support for tuples, sorry');
       }
-      expr1 = maybeList[0];
+      expr = maybeList[0];
     }
   }
-  if (this.eof()) {
-    return expr1;
-  }
 
-  if (this.la1('operator')) {
-    const operator = this.match('operator').content;
-    const expr2 = this.expression();
-    return ast.BinaryOp(operator, expr1, expr2);
-  }
-
-  if (this.la1('open square bracket')) {
-    this.match('open square bracket');
-    const deIndexExpr = this.expression();
-    this.match('close square bracket');
-    return ast.DeIndex(expr1, deIndexExpr);
-  }
-  return expr1;
+  return expr;
 };
 
 parser.list = function() {

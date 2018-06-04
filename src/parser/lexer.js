@@ -22,7 +22,7 @@ const identifier = () => ({
 
 const operator = () => ({
   name: 'operator',
-  regexp: /^[<>^%*/+-]+/,
+  regexp: /^[|&!<>^%*/+-]+/,
 });
 
 const comparrisonOperator = () => ({

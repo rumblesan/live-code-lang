@@ -51,9 +51,9 @@ describe('Assignment', function() {
     var numa = Assignment(
       Variable('numa'),
       BinaryOp(
-        '-',
-        BinaryOp('+', Num(55), BinaryOp('*', Num(44), Num(2))),
-        Num(321)
+        '+',
+        Num(55),
+        BinaryOp('-', BinaryOp('*', Num(44), Num(2)), Num(321))
       )
     );
     var numb = Assignment(

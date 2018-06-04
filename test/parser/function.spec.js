@@ -219,7 +219,7 @@ describe('Function', function() {
 
     var expected = Block([
       Application(Variable('box'), [
-        BinaryOp('+', Num(3), BinaryOp('+', Num(4), Num(2))),
+        BinaryOp('+', BinaryOp('+', Num(3), Num(4)), Num(2)),
       ]),
     ]);
 
