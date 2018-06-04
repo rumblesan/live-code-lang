@@ -36,6 +36,9 @@ lexer.addTokenType(comment());
 
 lexer.addTokenType(types.constant('if', 'if'));
 lexer.addTokenType(types.constant('else', 'else'));
+lexer.addTokenType(types.constant('loop', 'loop'));
+lexer.addTokenType(types.constant('times', 'times'));
+lexer.addTokenType(types.constant('with', 'with'));
 lexer.addTokenType(types.constant('return', 'return'));
 lexer.addTokenType(types.constant('=>', 'function arrow'));
 

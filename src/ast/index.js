@@ -7,11 +7,11 @@ import {
   IF,
   LAMBDA,
   LIST,
+  LOOP,
   NUMBER,
   NULL,
   RETURN,
   STRING,
-  TIMES,
   UNARYOP,
   VARIABLE,
 } from './types';
@@ -100,9 +100,9 @@ export function Return(value) {
  *  block:   Block
  *  loopVar: Identifier
  */
-export function Times(number, block, loopVar = Null()) {
+export function Loop(number, block, loopVar = Null()) {
   return {
-    type: TIMES,
+    type: LOOP,
     number,
     block,
     loopVar,

@@ -121,6 +121,9 @@ parser.statement = function() {
   if (this.la1('if')) {
     return this.ifStatement();
   }
+  if (this.la1('loop')) {
+    return this.loop();
+  }
   if (this.lan(2, 'open paren')) {
     return this.application();
   }
@@ -128,7 +131,7 @@ parser.statement = function() {
     return this.assignment();
   }
   throw new ParserException(
-    'Could not parse return, application or assignment'
+    `Could not parse statement from token ${this.token[0]}`
   );
 };
 
@@ -163,6 +166,21 @@ parser.ifStatement = function() {
     return ast.If(predicate, ifBlock, elseBlock);
   }
   return ast.If(predicate, ifBlock);
+};
+
+parser.loop = function() {
+  this.match('loop');
+  const timesExpr = this.expression();
+  this.match('times');
+  let loopVar;
+  if (this.la1('with')) {
+    this.match('with');
+    loopVar = ast.Variable(this.match('identifier').content);
+  }
+  this.match('open bracket');
+  const loopBlock = this.block();
+  this.match('close bracket');
+  return ast.Loop(timesExpr, loopBlock, loopVar);
 };
 
 parser.exprList = function() {
@@ -282,7 +300,6 @@ parser.nameList = function() {
 
 parser.parse = function(program) {
   const tokens = lexer.tokenize(program);
-  console.log(tokens);
   this.initialize(tokens);
   return this.program();
 };
