@@ -5,17 +5,6 @@ import lexer from './lexer';
 import * as ast from '../ast';
 import * as astTypes from '../ast/types';
 
-const exprListToArgs = exprList => {
-  return exprList.map(e => {
-    if (e.type !== astTypes.VARIABLE) {
-      throw new ParserException(
-        'Lambda definition args should not be expressions'
-      );
-    }
-    return e.identifier;
-  });
-};
-
 class ArithmaticShunter {
   constructor() {
     this.operatorStack = [];
@@ -241,23 +230,6 @@ parser.expression = function() {
   return expr;
 };
 
-parser.deindex = function(expr) {
-  this.match('open square bracket');
-  const deIndexExpr = this.expression();
-  this.match('close square bracket');
-  return ast.DeIndex(expr, deIndexExpr);
-};
-
-parser.arithmatic = function(firstExpr) {
-  const shunter = new ArithmaticShunter();
-  shunter.shuntValue(firstExpr);
-  while (!this.eof() && this.la1('operator')) {
-    shunter.shuntOp(this.match('operator').content);
-    shunter.shuntValue(this.baseExpression());
-  }
-  return shunter.getOutput();
-};
-
 parser.baseExpression = function() {
   let expr;
   if (this.la1('open square bracket')) {
@@ -281,31 +253,21 @@ parser.baseExpression = function() {
     }
   } else if (this.la1('open paren')) {
     this.match('open paren');
-    const maybeList = this.exprList();
+    const exprList = this.exprList();
     this.match('close paren');
 
     if (!this.eof() && this.la1('function arrow')) {
-      this.match('function arrow');
-      this.match('open bracket');
-      if (this.la1('newline')) {
-        const block = this.block();
-        this.match('close bracket');
-        return ast.Lambda(exprListToArgs(maybeList), block);
-      } else {
-        const expr = this.expression();
-        this.match('close bracket');
-        return ast.Lambda(exprListToArgs(maybeList), expr);
-      }
+      expr = this.lambda(exprList);
     } else {
-      if (maybeList.length <= 0) {
+      if (exprList.length <= 0) {
         throw new ParserException(
           'Cannot have an empty parenthesised expression'
         );
       }
-      if (maybeList.length >= 2) {
+      if (exprList.length >= 2) {
         throw new ParserException('No support for tuples, sorry');
       }
-      expr = maybeList[0];
+      expr = exprList[0];
     }
   } else {
     const { type, content, line, character } = this.tokens[0];
@@ -328,6 +290,16 @@ parser.deindex = function(expr) {
   return ast.DeIndex(expr, deIndexExpr);
 };
 
+parser.arithmatic = function(firstExpr) {
+  const shunter = new ArithmaticShunter();
+  shunter.shuntValue(firstExpr);
+  while (!this.eof() && this.la1('operator')) {
+    shunter.shuntOp(this.match('operator').content);
+    shunter.shuntValue(this.baseExpression());
+  }
+  return shunter.getOutput();
+};
+
 parser.list = function() {
   this.match('open square bracket');
   const exprs = this.exprList();
@@ -335,15 +307,30 @@ parser.list = function() {
   return ast.List(exprs);
 };
 
-parser.lambda = function() {
-  this.match('open paren');
-  const argNames = this.nameList();
-  this.match('close paren');
+const exprListToArgs = exprList => {
+  return exprList.map(e => {
+    if (e.type !== astTypes.VARIABLE) {
+      throw new ParserException(
+        `Lambda definition args should not be expressions but found ${e.type}`
+      );
+    }
+    return e.identifier;
+  });
+};
+
+parser.lambda = function(exprList) {
+  const argList = exprListToArgs(exprList);
   this.match('function arrow');
   this.match('open bracket');
-  const block = this.block();
-  this.match('close bracket');
-  return ast.Lambda(argNames, block);
+  if (this.la1('newline')) {
+    const block = this.block();
+    this.match('close bracket');
+    return ast.Lambda(argList, block);
+  } else {
+    const expr = this.expression();
+    this.match('close bracket');
+    return ast.Lambda(argList, expr);
+  }
 };
 
 parser.nameList = function() {
