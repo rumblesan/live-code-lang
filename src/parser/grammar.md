@@ -2,51 +2,55 @@
 
 
 ```
-start = Body
+start = Block
 
-Body = EOF | Statements EOF
+Block = EOF | Statements EOF
 
 Statements = Statement | Statement NewLine Statements
 
-EOF = NewLine End | End
+EOF = NewLine? End | End
 
 Statement = Assignment
           | Application
           | If
           | Loop
-          | Return
+          | 'return' Return
 
 Assignment = Identifier '=' Expression
 
 Application = Identifier '(' ArgList? ')'
 
-If = IfBlock ElseBlock?
-
-IfBlock = 'if' Expression OpenBracket NewLine Statements CloseBracket
-
-ElseBlock = 'else' OpenBracket NewLine Statements CloseBracket
-
-Loop = 'loop' Expression 'times' OpenBracket Newline Statements CloseBracket
-     | 'loop' Expression 'times' 'with' Identifier OpenBracket Newline Statements CloseBracket
-
-Return = 'return' Expression
-
 ArgList = Expression
         | Expression ',' ArgList
 
-Expression = Number
-           | '-' Expression
-           | Variable
-           | Lambda
-           | Application
+If = 'if' Expression OpenBracket NewLine Statements CloseBracket ElseBlock?
+
+ElseBlock = 'else' OpenBracket NewLine Statements CloseBracket
+
+Loop = 'loop' Expression 'times' ('with' Identifier)? OpenBracket Newline Statements CloseBracket
+
+Expression = BaseExpression
            | Arithmatic
 
-Arithmatic = Expression Operator Expression
+Arithmatic = BaseExpression Operator Expression
 
-Operator = '==' | '^' | '*' | '/' | '+' | '-' | '%' | '<' | '>' | '<=' | '>='
+BaseExpression = Number
+               | Variable
+               | List
+               | DeIndex
+               | '(' Expression ')'
+               | UnaryOperator Expression
+               | Lambda
+               | Application
 
 Lambda = '(' NameList? ')' '=>' OpenBracket NewLine Statements CloseBracket
        | '(' NameList? ')' '=>' OpenBracket Expression CloseBracket
+
+DeIndex = BaseExpression '[' Expression ']'
+
+Operator = '^' | '*' | '/' | '%' | '+' | '-' | '<' | '<=' | '>' | '>=' | '==' | '!=' | '&&' | '||'
+
+UnaryOperator = '!' | '-'
 
 NameList = Identifier | Identifier ',' NameList
 ```
