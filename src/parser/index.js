@@ -108,15 +108,9 @@ class Parser {
     }
 
     if (!this.la1(tokenType)) {
+      const { type, content, line, character } = this.tokens[0];
       throw new ParserException(
-        'Expected ' +
-          tokenType +
-          ' but found ' +
-          this.tokens[0].type +
-          ' at l' +
-          this.tokens[0].line +
-          '.' +
-          this.tokens[0].character
+        `Expected ${tokenType} but found ${type} (${content}) at l${line}.${character}`
       );
     }
 
@@ -127,13 +121,9 @@ class Parser {
   }
   expectEof() {
     if (!this.eof()) {
+      const { type, line, character } = this.tokens[0];
       throw new ParserException(
-        'Expected EOF but found ' +
-          this.tokens[0].type +
-          ' at l' +
-          this.tokens[0].line +
-          '.' +
-          this.tokens[0].character
+        `Expected EOF but found ${type} at l${line}.${character}`
       );
     }
   }
@@ -175,8 +165,9 @@ parser.statement = function() {
   if (this.lan(2, 'assignment')) {
     return this.assignment();
   }
+  const { type, content, line, character } = this.tokens[0];
   throw new ParserException(
-    `Could not parse statement from token ${this.token[0]}`
+    `Could not parse statement from token ${type} (${content}) at l${line}.${character}`
   );
 };
 
@@ -195,6 +186,7 @@ parser.application = function() {
   return ast.Application(ast.Variable(name), args);
 };
 
+// TODO handle elseif
 parser.ifStatement = function() {
   this.match('if');
   const predicate = this.expression();
@@ -318,6 +310,11 @@ parser.baseExpression = function() {
       }
       expr = maybeList[0];
     }
+  } else {
+    const { type, content, line, character } = this.tokens[0];
+    throw new ParserException(
+      `Could not parse Expression on ${type} (${content}) at l${line}.${character}`
+    );
   }
 
   return expr;
