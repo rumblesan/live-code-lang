@@ -235,9 +235,6 @@ parser.exprList = function() {
 
 parser.expression = function() {
   let expr = this.baseExpression();
-  if (!this.eof() && this.la1('open square bracket')) {
-    expr = this.deindex(expr);
-  }
   if (!this.eof() && this.la1('operator')) {
     expr = this.arithmatic(expr);
   }
@@ -317,7 +314,18 @@ parser.baseExpression = function() {
     );
   }
 
+  while (!this.eof() && this.la1('open square bracket')) {
+    expr = this.deindex(expr);
+  }
+
   return expr;
+};
+
+parser.deindex = function(expr) {
+  this.match('open square bracket');
+  const deIndexExpr = this.expression();
+  this.match('close square bracket');
+  return ast.DeIndex(expr, deIndexExpr);
 };
 
 parser.list = function() {

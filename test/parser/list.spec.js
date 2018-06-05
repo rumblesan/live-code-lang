@@ -34,4 +34,28 @@ describe('List', function() {
     ]);
     assert.deepEqual(parsed, expected);
   });
+  it('can multiple deindex', function() {
+    var program = dedent(`
+                         a = [[1], [3], [5]]
+                         b = [[1], [3], [5]]
+                         c = [a, b][0][1]
+                         `);
+    var parsed = parser.parse(program);
+
+    var expected = Block([
+      Assignment(
+        Variable('a'),
+        List([List([Num(1)]), List([Num(3)]), List([Num(5)])])
+      ),
+      Assignment(
+        Variable('b'),
+        List([List([Num(1)]), List([Num(3)]), List([Num(5)])])
+      ),
+      Assignment(
+        Variable('c'),
+        DeIndex(DeIndex(List([Variable('a'), Variable('b')]), Num(0)), Num(1))
+      ),
+    ]);
+    assert.deepEqual(parsed, expected);
+  });
 });
