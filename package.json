@@ -1,13 +1,13 @@
 {
-  "name": "livecodelang",
+  "name": "@rumblesan/livecodelang",
   "version": "0.1.0",
-  "description": "A live coding language for Live Code Lab",
+  "description": "A live coding language for the browser",
   "main": "lib/library.js",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/rumblesan/livecodelang/issues"
+    "url": "https://github.com/rumblesan/live-code-lang/issues"
   },
-  "repository": "rumblesan/livecodelang",
+  "repository": "rumblesan/live-code-lang",
   "scripts": {
     "lint": "eslint src",
     "build": "webpack-cli --mode production",
@@ -15,8 +15,7 @@
     "dev": "webpack-cli --progress --colors --watch --mode development",
     "test": "jest test",
     "posttest": "npm run lint",
-    "test:watch": "jest test --watch",
-    "prettier": "prettier --single-quote --trailing-comma es5"
+    "test:watch": "jest test --watch"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
