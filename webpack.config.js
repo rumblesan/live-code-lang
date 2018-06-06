@@ -15,6 +15,7 @@ module.exports = (env, argv) => {
       path: path.resolve(__dirname, 'lib'),
       filename: outputName,
       library: libraryName,
+      libraryTarget: 'umd',
     },
     module: {
       rules: [

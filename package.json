@@ -1,6 +1,6 @@
 {
   "name": "@rumblesan/livecodelang",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A live coding language for the browser",
   "main": "lib/livecodelang.min.js",
   "license": "BSD-3-Clause",
