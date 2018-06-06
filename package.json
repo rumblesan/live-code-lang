@@ -1,6 +1,6 @@
 {
   "name": "@rumblesan/livecodelang",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A live coding language for the browser",
   "main": "lib/library.js",
   "license": "BSD-3-Clause",
@@ -15,8 +15,7 @@
     "dev": "webpack-cli --progress --colors --watch --mode development",
     "test": "jest test",
     "posttest": "npm run lint",
-    "test:watch": "jest test --watch",
-    "publish": "npm publish --access public"
+    "test:watch": "jest test --watch"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
