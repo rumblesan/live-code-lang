@@ -54,4 +54,18 @@ describe('Basics', function() {
 
     assert.deepEqual(parsed, expected);
   });
+
+  it('parses a simple bare expression', function() {
+    const program = dedent(`
+                           3 * 4 + 2
+                           `);
+
+    const parsed = parser.parse(program);
+
+    const expected = Block([
+      BinaryOp('+', BinaryOp('*', Num(3), Num(4)), Num(2)),
+    ]);
+
+    assert.deepEqual(parsed, expected);
+  });
 });

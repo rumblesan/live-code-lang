@@ -148,16 +148,10 @@ parser.statement = function() {
   if (this.la1('loop')) {
     return this.loop();
   }
-  if (this.lan(2, 'open paren')) {
-    return this.application();
-  }
   if (this.lan(2, 'assignment')) {
     return this.assignment();
   }
-  const { type, content, line, character } = this.tokens[0];
-  throw new ParserException(
-    `Could not parse statement from token ${type} (${content}) at l${line}.${character}`
-  );
+  return this.expression();
 };
 
 parser.assignment = function() {
