@@ -1,8 +1,8 @@
 {
   "name": "@rumblesan/livecodelang",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A live coding language for the browser",
-  "main": "lib/library.js",
+  "main": "lib/livecodelang.min.js",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/rumblesan/live-code-lang/issues"
@@ -15,26 +15,27 @@
     "dev": "webpack-cli --progress --colors --watch --mode development",
     "test": "jest test",
     "posttest": "npm run lint",
-    "test:watch": "jest test --watch"
+    "test:watch": "jest test --watch",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
     "babel-eslint": "7.2.3",
-    "babel-jest": "^23.0.1",
+    "babel-jest": "23.0.1",
     "babel-loader": "7.1.4",
     "babel-polyfill": "6.23.0",
-    "babel-preset-env": "^1.7.0",
+    "babel-preset-env": "1.7.0",
     "dentist": "1.0.3",
     "eslint": "4.19.1",
     "eslint-config-prettier": "2.9.0",
     "eslint-plugin-prettier": "2.6.0",
-    "jest": "^23.1.0",
+    "jest": "23.1.0",
     "prettier": "1.13.4",
     "webpack": "4.10.2",
-    "webpack-cli": "^3.0.0"
+    "webpack-cli": "3.0.0"
   },
   "dependencies": {
-    "canto34": "^2.0.1"
+    "canto34": "2.0.1"
   },
   "jest": {
     "modulePaths": ["src"]
