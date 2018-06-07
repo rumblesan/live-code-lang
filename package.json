@@ -1,6 +1,6 @@
 {
   "name": "@rumblesan/livecodelang",
-  "version": "0.2.3",
+  "version": "0.1.0",
   "description": "A live coding language for the browser",
   "main": "lib/livecodelang.min.js",
   "license": "BSD-3-Clause",
@@ -38,6 +38,8 @@
     "canto34": "2.0.1"
   },
   "jest": {
-    "modulePaths": ["src"]
+    "modulePaths": [
+      "src"
+    ]
   }
 }

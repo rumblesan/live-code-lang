@@ -195,7 +195,7 @@ parser.loop = function() {
   let loopVar;
   if (this.la1('with')) {
     this.match('with');
-    loopVar = ast.Variable(this.match('identifier').content);
+    loopVar = this.match('identifier').content;
   }
   this.match('open bracket');
   const loopBlock = this.block();
