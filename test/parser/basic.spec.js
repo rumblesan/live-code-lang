@@ -68,4 +68,16 @@ describe('Basics', function() {
 
     assert.deepEqual(parsed, expected);
   });
+
+  it('parses a single number expression', function() {
+    const program = dedent(`
+                           7
+                           `);
+
+    const parsed = parser.parse(program);
+
+    const expected = Block([Num(7)]);
+
+    assert.deepEqual(parsed, expected);
+  });
 });

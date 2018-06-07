@@ -148,7 +148,7 @@ parser.statement = function() {
   if (this.la1('loop')) {
     return this.loop();
   }
-  if (this.lan(2, 'assignment')) {
+  if (this.tokens.length > 1 && this.lan(2, 'assignment')) {
     return this.assignment();
   }
   return this.expression();
