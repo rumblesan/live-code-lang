@@ -32,11 +32,7 @@ describe('Loop', function() {
     var parsed = parser.parse(program);
 
     var expected = Block([
-      Loop(
-        Num(4),
-        Block([Application(Variable('box'), [Num(4)])]),
-        Variable('i')
-      ),
+      Loop(Num(4), Block([Application(Variable('box'), [Num(4)])]), 'i'),
     ]);
     assert.deepEqual(parsed, expected);
   });
@@ -55,7 +51,7 @@ describe('Loop', function() {
       Loop(
         Variable('foo'),
         Block([Application(Variable('box'), [Num(4)])]),
-        Variable('i')
+        'i'
       ),
     ]);
     assert.deepEqual(parsed, expected);
