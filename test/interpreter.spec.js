@@ -1,6 +1,6 @@
 /* global describe, it */
 
-import { interpret } from 'interpreter';
+import { interpret, stepInterpret } from 'interpreter';
 import parser from 'parser';
 import {
   Application,
@@ -127,5 +127,52 @@ describe('Interpreter', function() {
     interpret(program, scope);
 
     assert.equal(output, 9, `output should be 9 not ${output}`);
+  });
+
+  it('does now allow closures to modify externally scoped variables', function() {
+    var output;
+    var scope = {
+      result: {
+        type: 'builtin',
+        func: function(v) {
+          output = v;
+        },
+      },
+    };
+
+    var program = parser.parse(
+      dedent(`
+             a = 0
+             b = (x) => {
+               a = a + 1
+               return a + x
+             }
+             b(0)
+             b(0)
+             c = b(0)
+             result(c)
+             `)
+    );
+    interpret(program, scope);
+
+    assert.equal(output, 1, `output should be 1 not ${output}`);
+  });
+
+  it('keeps scope between step interpreter runs', function() {
+    var output;
+    var scope = {
+      result: {
+        type: 'builtin',
+        func: function(v) {
+          output = v;
+        },
+      },
+    };
+    stepInterpret(parser.parse('a = 1 + 2'), scope);
+    stepInterpret(parser.parse('b = a + 1'), scope);
+    stepInterpret(parser.parse('c = b + a'), scope);
+    stepInterpret(parser.parse('result(c)'), scope);
+
+    assert.equal(output, 7, 'should return 8');
   });
 });

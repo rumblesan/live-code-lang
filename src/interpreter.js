@@ -27,12 +27,26 @@ function createChildScope(parentScope) {
 export const internal = {};
 
 export function interpret(programBlock, globalscope) {
-  if (programBlock.type !== BLOCK) {
-    return { exitCode: 1 };
-  }
-
   const value = internal.evaluate(programBlock, globalscope);
   return { exitCode: 0, value };
+}
+
+export function stepInterpret(program, globalscope) {
+  if (program.type !== BLOCK) {
+    const value = internal.evaluate(program, globalscope);
+    return { exitCode: 1, value };
+  }
+
+  var output = null;
+  for (let i = 0; i < program.elements.length; i += 1) {
+    const el = program.elements[i];
+    output = internal.evaluate(el, globalscope);
+    if (el.type === RETURN) {
+      break;
+    }
+  }
+
+  return { exitCode: 0, value: output };
 }
 
 internal.evaluate = function(node, scope) {
