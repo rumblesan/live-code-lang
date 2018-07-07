@@ -10,6 +10,6 @@ export const LOOP = 'LOOP';
 export const NUMBER = 'NUMBER';
 export const NULL = 'NULL';
 export const RETURN = 'RETURN';
-export const STRING = 'STRING';
+export const PATTERN = 'PATTERN';
 export const UNARYOP = 'UNARYOP';
 export const VARIABLE = 'VARIABLE';

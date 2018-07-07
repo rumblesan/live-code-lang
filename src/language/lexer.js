@@ -20,6 +20,11 @@ const identifier = () => ({
   regexp: /^[a-zA-Z][a-zA-Z0-9]*/,
 });
 
+const pattern = () => ({
+  name: 'pattern',
+  regexp: /^".*"/,
+});
+
 const operator = () => ({
   name: 'operator',
   regexp: /^[|&!<=>^%*/+-]+/,
@@ -60,5 +65,6 @@ lexer.addTokenType(types.floatingPoint());
 lexer.addTokenType(types.integer());
 
 lexer.addTokenType(identifier());
+lexer.addTokenType(pattern());
 
 export default lexer;

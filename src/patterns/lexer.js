@@ -11,6 +11,7 @@ const value = () => ({
 
 lexer.addTokenType(types.whitespace());
 
+lexer.addTokenType(types.constant('"', 'delimiter'));
 lexer.addTokenType(types.constant('~', 'rest'));
 
 lexer.addTokenType(types.openBracket());

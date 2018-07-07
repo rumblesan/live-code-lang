@@ -6,6 +6,8 @@ import lexer from './lexer';
 import * as ast from '../ast';
 import * as astTypes from '../ast/types';
 
+import patternParser from 'patterns/parser';
+
 class ArithmaticShunter {
   constructor() {
     this.operatorStack = [];
@@ -205,6 +207,10 @@ parser.baseExpression = function() {
       }
       expr = exprList[0];
     }
+  } else if (this.la1('pattern')) {
+    expr = ast.Pattern(
+      patternParser.parseWithDelimiters(this.match('pattern').content)
+    );
   } else {
     const { type, content, line, character } = this.tokens[0];
     throw new ParserException(

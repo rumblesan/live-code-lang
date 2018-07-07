@@ -11,7 +11,7 @@ import {
   NUMBER,
   NULL,
   RETURN,
-  STRING,
+  PATTERN,
   UNARYOP,
   VARIABLE,
 } from './types';
@@ -168,11 +168,11 @@ export function Variable(identifier) {
 }
 
 /**
- *  value: String
+ *  value: Pattern
  */
-export function Str(value) {
+export function Pattern(value) {
   return {
-    type: STRING,
+    type: PATTERN,
     value,
   };
 }

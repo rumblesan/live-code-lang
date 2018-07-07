@@ -8,6 +8,18 @@ const VALUE = 'VALUE';
 
 const parser = new Parser();
 
+parser.parseWithDelimiters = function(string) {
+  const tokens = lexer.tokenize(string);
+  this.initialize(tokens);
+  this.match('delimiter');
+  const pattern = this.pattern();
+  this.match('delimiter');
+  if (pattern.type !== PATTERN) {
+    throw new ParserException(`Expected Pattern but got ${pattern.type}`);
+  }
+  return pattern.value;
+};
+
 parser.parse = function(string) {
   const tokens = lexer.tokenize(string);
   this.initialize(tokens);
@@ -23,6 +35,7 @@ parser.values = function() {
 
   while (
     !this.eof() &&
+    !this.la1('delimiter') &&
     !this.la1('close bracket') &&
     !this.la1('close square bracket')
   ) {
