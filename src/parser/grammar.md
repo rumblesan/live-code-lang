@@ -38,6 +38,7 @@ BaseExpression = Number
                | Variable
                | List
                | DeIndex
+               | Pattern
                | '(' Expression ')'
                | UnaryOperator Expression
                | Lambda
@@ -54,3 +55,7 @@ UnaryOperator = '!' | '-'
 
 NameList = Identifier | Identifier ',' NameList
 ```
+
+## Patterns
+
+For *Pattern* grammar, check the [patterns readme](/src/patterns/patterns.md).
