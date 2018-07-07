@@ -1,7 +1,7 @@
 /* global describe, it */
 
 import { interpret, stepInterpret } from 'interpreter';
-import parser from 'parser';
+import parser from 'language/parser';
 import {
   Application,
   Assignment,

@@ -1,6 +1,6 @@
 /* global describe, it */
 
-import parser from 'parser';
+import parser from 'language/parser';
 
 import { Assignment, Block, DeIndex, List, Num, Variable } from 'ast';
 

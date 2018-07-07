@@ -1,6 +1,6 @@
 /* global describe, it */
 
-import parser from 'parser';
+import parser from 'language/parser';
 import { Assignment, BinaryOp, Block, Num, UnaryOp, Variable } from 'ast';
 
 import { dedent } from 'dentist';

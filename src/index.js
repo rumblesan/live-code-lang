@@ -1,6 +1,6 @@
 import './polyfill';
-import parser from './parser';
-import lexer from './parser/lexer';
+import parser from './language/parser';
+import lexer from './language/lexer';
 
 import { interpret, stepInterpret } from './interpreter';
 
